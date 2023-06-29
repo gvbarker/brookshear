@@ -1,9 +1,13 @@
 import React from "react"
 import "./App.css";
+import Assembler from "./components/Assembler";
 
 function App() {
+  function data() {
+    
+  }
   return (
-    <h1>fucks</h1>
+    <Assembler></Assembler>
   );
 }
 
