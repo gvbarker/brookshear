@@ -48,8 +48,7 @@ export default function Assembler({ data }) {
       <div>
         { celltable() }
       </div>
-      <button onClick={handleCLick}>handleCLick</button>
-      <button onClick={generate16WidthTable}>tabletest</button>
+      <button onClick={handleCLick}>handleClick</button>
     </>
   );
 }
