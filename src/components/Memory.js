@@ -1,8 +1,29 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
+import assembler from "../emulator/assembler"
 
-export default function Assembler({ data }) {
+export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
+  const testCode = `;3-op functions
+group1:
+add r1,r2,r3
+sub r4,r5,r6 ;testing
+ior r7,r8,r9
+
+;2-op functions
+group2:
+mov r3,#02
+ldr r4,$03
+cpy r5,r4
+  
+;jump functions
+group3:
+beq r1,$03
+beq r9,group1
+hlt`
+  let emuTest = new assembler(testCode)
+
+
   function handleCLick() {
     let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
     let nextCells = assemblerState.slice();
@@ -26,19 +47,21 @@ export default function Assembler({ data }) {
     let table = generate16WidthTable()
     return (
       <table>
-        {table.map((rowValue, rowIndex) => {
-          return [
-            <tr key={rowIndex}>
-              {rowValue.map((columnValue, columnIndex) => {
-                return [
-                  <td key={ rowIndex.toString(16)+columnIndex.toString(16) }>
-                    <Cell key={ columnIndex.toString(16)+columnValue } value={ columnValue}></Cell>
-                  </td>
-                ]
-              })}
-            </tr>
-          ]
-        })}
+        <tbody>
+          {table.map((rowValue, rowIndex) => {
+            return [
+              <tr key={rowIndex}>
+                {rowValue.map((columnValue, columnIndex) => {
+                  return [
+                    <td key={ rowIndex.toString(16)+columnIndex.toString(16) }>
+                      <Cell key={ columnIndex.toString(16)+columnValue } value={ columnValue}></Cell>
+                    </td>
+                  ]
+                })}
+              </tr>
+            ]
+          })}
+        </tbody>
       </table>
     )
   }
@@ -49,6 +72,7 @@ export default function Assembler({ data }) {
         { celltable() }
       </div>
       <button onClick={handleCLick}>handleClick</button>
+      <button onClick={(() => emuTest.assemble())}>assembler</button>
     </>
   );
 }

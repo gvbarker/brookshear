@@ -1,6 +1,6 @@
 import React from "react"
 import "./App.css";
-import Assembler from "./components/Assembler";
+import Assembler from "./components/Memory";
 
 function App() {
   return (
