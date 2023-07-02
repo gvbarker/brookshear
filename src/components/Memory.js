@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 
-export default function Assembler({ data }) {
+export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
   function handleCLick() {
     let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
