@@ -17,7 +17,7 @@ ldr r4,$03
 cpy r5,r4
   
 ;jump functions
-group3:
+group3: 
 beq r1,$03
 beq r9,group1
 hlt`
