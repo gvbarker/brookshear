@@ -26,49 +26,63 @@ let assembler = class {
   }
 
   assemble() {
-    let codeLineArray = this.unassembledCode.split("\n");
-    codeLineArray = this.stripComments(codeLineArray);
-    for (let i = 0; i < codeLineArray.length; i++) {
-      const line = codeLineArray[i].trim();
+    let codeArray = this.unassembledCode.split("\n");
+    codeArray = this.stripCommentsAndEmptyLines(codeArray);
+    this.assignLabels(codeArray);
+    //pass for instructions
+    for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { 
         //this.reset()
         return 
       }
-      if (line.search(":") > -1) { 
-        const newLabel = this.getValidatedLabel(line, i) 
-        this.addNewLabel(newLabel);
-        continue;
-      } 
-      this.getOperation(line, i)
+       
+      //this.getOperation(codeArray[i], i)
     }
     //codeLineArray = this.convertLines(codeLineArray);
   }
-
-  getValidatedLabel(line, lineNumber) {
-    line = line.split(":");
-    let labelError = `Invalid label at ${lineNumber}`
-    try { 
-      if (line.length > 2  || line[1].length) throw labelError;
-      if (!line[0]) throw labelError;
-      if (line[0].search(" ") > -1) throw labelError;
-      return line[0];
+  assignLabels(codeArray) {
+    let self = this
+    function getValidatedLabel(line, lineNumber) {
+      line = line.split(":");
+      let labelError = `Invalid label at ${lineNumber}`
+      try { 
+        if (line.length > 2  || line[1].length) throw labelError;
+        if (!line[0]) throw labelError;
+        if (line[0].search(" ") > -1) throw labelError;
+        return line[0];
+      }
+      catch(err) {
+        this.handleErrors(err);
+      }
     }
-    catch(err) {
-      this.handleErrors(err);
+
+    function addNewLabel(label, location, lineNumber) {
+      try{
+        if (label in self.labels) throw `Duplicate label in line ${lineNumber}`;
+        self.labels[label] = location;
+      }
+      catch(err) {
+        self.handleErrors(err);
+      }
+    }
+
+    let location = 0;
+
+    for (let i = 0; i < codeArray.length; i++) {
+      console.log(codeArray[i])
+      if (this.errorFlag) { 
+        //this.reset()
+        return 
+      }
+      if (codeArray[i].includes(":")) { 
+        const newLabel = getValidatedLabel(codeArray[i], i) 
+        addNewLabel(newLabel, location, i);
+      }
+      else { location += 2 }
     }
   }
-
-  addNewLabel(label, lineNumber) {
-    try{
-      if (label in this.labels) throw `Duplicate label in line ${lineNumber}`;
-      this.labels[label] = this.assembledCode.length;
-    }
-    catch(err) {
-      this.handleErrors(err);
-    }
-  }
-
-  stripComments(codeArray) {
+ 
+  stripCommentsAndEmptyLines(codeArray) {
     let cleanedCodeArray = [];
     for (let i of codeArray) {
       let line = i.trim();
