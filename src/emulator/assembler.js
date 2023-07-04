@@ -3,7 +3,7 @@ let assembler = class {
     this.unassembledCode = code;
     this.labels = {};
     this.assembledCode = [];
-    this.operations = {
+    this.ops = {
       "LDR":0x1,
       "STR":0x3,
       "MOV":0x4,
@@ -15,7 +15,11 @@ let assembler = class {
       "ROR":0xA,
       "BEQ":0xB,
       "HLT":0xC,
-      "threeOperandOperations":["ADD", "SUB", "IOR", "AND", "XOR"],
+      "threeOperandOps":["ADD", "SUB", "IOR", "AND", "XOR"],
+      "twoOperandOps":["LDR", "STR", "MOV", "ROR", "BEQ"],
+      "oneOperandOps":["HLT"],
+      "immediateOps":["LDR", "ROR"],
+      "addressOps":["LDR", "STR", "BEQ"]
     };
     this.errorFlag = false; 
   }
@@ -107,31 +111,47 @@ let assembler = class {
       }
       return (validatedRegisters)
     }
-    function handleThreeOperandOperation(op, lineNumber) {
+    
+    function handleThreeOperandOperation(op, line, lineNumber) {
       try{
-        if (!self.operations.threeOperandOperations.includes(op)) throw `Invalid usage of "${op}" in line ${lineNumber}.`;
-        if ((codeArray[lineNumber].indexOf("#") > -1) || (codeArray[lineNumber].indexOf("$") > -1)) throw `Invalid operand usage for operation "${op}" in line ${lineNumber}`;
-        let regs = codeArray[lineNumber].slice(codeArray[lineNumber].indexOf("r", 3), codeArray[lineNumber].length);
+        const hasImmediate =  (line.indexOf("#") > -1);
+        const hasMemAddr = (line.indexOf("$") > -1);
+
+        if (hasImmediate || hasMemAddr) throw `Invalid operand usage for operation "${op}" in line ${lineNumber}`;
+        
+        let regs = line.slice(line.indexOf("r", 3), line.length);
         regs = getValidatedRegisters(lineNumber, regs.split(","));
-        self.assembledCode.push(self.operations[op] + regs[0]);
+        
+        self.assembledCode.push(self.ops[op] + regs[0]);
         self.assembledCode.push(regs[1] + regs[2]);
       }
       catch(err) {
         self.handleErrors(err);
+        return;
       }
-          
     }
+
+    function handleTwoOperandOperation(op, line, lineNumber) {
+      try {
+        //test
+      } 
+      catch (err) {
+        self.handleErrors(err);
+        return;
+      }
+    }
+
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { return; }
       let count = codeArray[i].split(",").length-1;
       const operation = this.getOperation(codeArray[i], i);
       switch(count) {
       case 2: {
-        handleThreeOperandOperation(operation, i);
+        handleThreeOperandOperation(operation, codeArray[i], i);
         break;
       }
       case 1: {
-        
+        handleTwoOperandOperation(operation, codeArray[i], i);
         break;
       }
       case 0:
@@ -141,6 +161,7 @@ let assembler = class {
         return
       }
     }
+    console.log(this.assembledCode)
   }
 
   getOperation(line, lineNumber) {
@@ -148,7 +169,7 @@ let assembler = class {
     let searchReturn = operationRegex.exec(line);
     try {
       if (!searchReturn) throw `No operation found in line ${lineNumber}`
-      const opCheck = searchReturn[0].toUpperCase() in this.operations 
+      const opCheck = searchReturn[0].toUpperCase() in this.ops 
       if (!opCheck) throw `Invalid operation in line ${lineNumber}`
     }
     catch(err) {
