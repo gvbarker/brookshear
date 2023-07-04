@@ -107,33 +107,33 @@ let assembler = class {
       }
       return (validatedRegisters)
     }
-
     for (let i = 0; i < codeArray.length; i++) {
-      if (this.errorFlag) { return }
+      if (this.errorFlag) { return; }
       let count = codeArray[i].split(",").length-1;
       const operation = this.getOperation(codeArray[i], i);
-      switch(count) {
-      case 2:
-        try {
+      try {
+        switch(count) {
+        case 2: {
           if (!this.operations.threeOperandOperations.includes(operation)) throw `Invalid usage of "${operation}" in line ${i}.`;
           if ((codeArray[i].indexOf("#") > -1) || (codeArray[i].indexOf("$") > -1)) throw `Invalid operand usage for operation "${operation}" in line ${i}`;
-          let regs = codeArray[i].slice(codeArray[i].indexOf("r", 3), codeArray[i].length)
+          let regs = codeArray[i].slice(codeArray[i].indexOf("r", 3), codeArray[i].length);
           regs = getValidatedRegisters(i, regs.split(","));
-          this.assembledCode.push(this.operations[operation] + regs[0])
-          this.assembledCode.push(regs[1] + regs[2])
-          console.log(this.assembledCode)
+          this.assembledCode.push(this.operations[operation] + regs[0]);
+          this.assembledCode.push(regs[1] + regs[2]);
+          break;
         }
-        catch(err) {
-          this.handleErrors(err)
+        
+        case 1:
+          break;
+        case 0:
+          break
+        default:
+          this.handleErrors(`Something went wrong in line ${i}`);
           return
         }
-        break
-      case 1:
-        break;
-      case 0:
-        break
-      default:
-        this.handleErrors(`Something went wrong in line ${i}`);
+      }
+      catch(err) {
+        this.handleErrors(err)
         return
       }
     }
