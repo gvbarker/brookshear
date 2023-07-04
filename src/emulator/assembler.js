@@ -30,15 +30,14 @@ let assembler = class {
 
   assemble() {
     let codeArray = this.unassembledCode.split("\n");
-    codeArray = this.stripCommentsAndEmptyLines(codeArray);
-    codeArray = this.passForLabels(codeArray);
-    codeArray = this.passForInstructions(codeArray);
+    codeArray = this.#stripCommentsAndEmptyLines(codeArray);
+    codeArray = this.#passForLabels(codeArray);
+    codeArray = this.#passForInstructions(codeArray);
     this.reset()
   }
 
-  passForLabels(codeArray) {
+  #passForLabels(codeArray) {
     let self = this
-
     function getValidatedLabel(line, lineNumber) {
       line = line.split(":");
       let labelError = `Invalid label at ${lineNumber}`
@@ -49,7 +48,7 @@ let assembler = class {
         return line[0];
       }
       catch(err) {
-        self.handleErrors(err);
+        self.#handleErrors(err);
       }
     }
 
@@ -59,7 +58,7 @@ let assembler = class {
         self.labels[label] = location;
       }
       catch(err) {
-        self.handleErrors(err);
+        self.#handleErrors(err);
       }
     }
 
@@ -80,7 +79,7 @@ let assembler = class {
     return labelStrippedCodeArray;
   }
  
-  stripCommentsAndEmptyLines(codeArray) {
+  #stripCommentsAndEmptyLines(codeArray) {
     let cleanedCodeArray = [];
     for (let i = 0; i < codeArray.length; i++) {
       const commentStartIndex = codeArray[i].indexOf(";");
@@ -95,7 +94,7 @@ let assembler = class {
     return cleanedCodeArray
   }
   
-  passForInstructions(codeArray) {
+  #passForInstructions(codeArray) {
     let self = this
     function getValidatedRegisters(lineNumber, registers) {
       let validatedRegisters = []
@@ -105,7 +104,7 @@ let assembler = class {
           validatedRegisters.push(registers[i].slice(1));
         } 
         catch (err) {
-          self.handleErrors(err)
+          self.#handleErrors(err)
           return
         }
       }
@@ -126,7 +125,7 @@ let assembler = class {
         self.assembledCode.push(regs[1] + regs[2]);
       }
       catch(err) {
-        self.handleErrors(err);
+        self.#handleErrors(err);
         return;
       }
     }
@@ -142,9 +141,12 @@ let assembler = class {
         if (hasImmediate && line.indexOf("#") < line.indexOf("R", 2)) throw immediateError;
         if (hasMemAddr && !self.ops.addressOps.includes(op)) throw memAddrError;
         if (hasMemAddr && line.indexOf("$") < line.indexOf("R", 2)) throw memAddrError; 
+
+
+
       }
       catch (err) {
-        self.handleErrors(err);
+        self.#handleErrors(err);
         return;
       }
     }
@@ -152,7 +154,7 @@ let assembler = class {
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { return; }
       let count = codeArray[i].split(",").length-1;
-      const operation = this.getOperation(codeArray[i], i);
+      const operation = this.#getOperation(codeArray[i], i);
       switch(count) {
       case 2: {
         handleThreeOperandOperation(operation, codeArray[i].toUpperCase(), i);
@@ -165,14 +167,14 @@ let assembler = class {
       case 0:
         break
       default:
-        this.handleErrors(`Something went wrong in line ${i}`);
+        this.#handleErrors(`Something went wrong in line ${i}`);
         return
       }
     }
     console.log(this.assembledCode)
   }
 
-  getOperation(line, lineNumber) {
+  #getOperation(line, lineNumber) {
     const operationRegex = /([A-Z]{3}|[A-Z][a-z]{2}|[a-z]{3})/
     let searchReturn = operationRegex.exec(line);
     try {
@@ -181,12 +183,12 @@ let assembler = class {
       if (!opCheck) throw `Invalid operation in line ${lineNumber}`
     }
     catch(err) {
-      this.handleErrors(err)
+      this.#handleErrors(err)
     }
     return searchReturn[0].toUpperCase();
   }
 
-  handleErrors(err) {
+  #handleErrors(err) {
     alert(err);
     this.errorFlag = true;
     return;
