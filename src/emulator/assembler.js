@@ -107,33 +107,37 @@ let assembler = class {
       }
       return (validatedRegisters)
     }
+    function handleThreeOperandOperation(op, lineNumber) {
+      try{
+        if (!self.operations.threeOperandOperations.includes(op)) throw `Invalid usage of "${op}" in line ${lineNumber}.`;
+        if ((codeArray[lineNumber].indexOf("#") > -1) || (codeArray[lineNumber].indexOf("$") > -1)) throw `Invalid operand usage for operation "${op}" in line ${lineNumber}`;
+        let regs = codeArray[lineNumber].slice(codeArray[lineNumber].indexOf("r", 3), codeArray[lineNumber].length);
+        regs = getValidatedRegisters(lineNumber, regs.split(","));
+        self.assembledCode.push(self.operations[op] + regs[0]);
+        self.assembledCode.push(regs[1] + regs[2]);
+      }
+      catch(err) {
+        self.handleErrors(err);
+      }
+          
+    }
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { return; }
       let count = codeArray[i].split(",").length-1;
       const operation = this.getOperation(codeArray[i], i);
-      try {
-        switch(count) {
-        case 2: {
-          if (!this.operations.threeOperandOperations.includes(operation)) throw `Invalid usage of "${operation}" in line ${i}.`;
-          if ((codeArray[i].indexOf("#") > -1) || (codeArray[i].indexOf("$") > -1)) throw `Invalid operand usage for operation "${operation}" in line ${i}`;
-          let regs = codeArray[i].slice(codeArray[i].indexOf("r", 3), codeArray[i].length);
-          regs = getValidatedRegisters(i, regs.split(","));
-          this.assembledCode.push(this.operations[operation] + regs[0]);
-          this.assembledCode.push(regs[1] + regs[2]);
-          break;
-        }
-        
-        case 1:
-          break;
-        case 0:
-          break
-        default:
-          this.handleErrors(`Something went wrong in line ${i}`);
-          return
-        }
+      switch(count) {
+      case 2: {
+        handleThreeOperandOperation(operation, i);
+        break;
       }
-      catch(err) {
-        this.handleErrors(err)
+      case 1: {
+        
+        break;
+      }
+      case 0:
+        break
+      default:
+        this.handleErrors(`Something went wrong in line ${i}`);
         return
       }
     }
