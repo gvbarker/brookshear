@@ -28,20 +28,23 @@ let assembler = class {
   assemble() {
     let codeArray = this.unassembledCode.split("\n");
     codeArray = this.stripCommentsAndEmptyLines(codeArray);
-    this.assignLabels(codeArray);
-    //pass for instructions
+    codeArray = this.passForLabels(codeArray);
+    console.log(codeArray);
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { 
-        //this.reset()
+        this.reset();
         return 
       }
        
       //this.getOperation(codeArray[i], i)
     }
     //codeLineArray = this.convertLines(codeLineArray);
+    this.reset()
   }
-  assignLabels(codeArray) {
+
+  passForLabels(codeArray) {
     let self = this
+
     function getValidatedLabel(line, lineNumber) {
       line = line.split(":");
       let labelError = `Invalid label at ${lineNumber}`
@@ -67,9 +70,8 @@ let assembler = class {
     }
 
     let location = 0;
-
+    let labelStrippedCodeArray = [];
     for (let i = 0; i < codeArray.length; i++) {
-      console.log(codeArray[i])
       if (this.errorFlag) { 
         //this.reset()
         return 
@@ -77,9 +79,12 @@ let assembler = class {
       if (codeArray[i].includes(":")) { 
         const newLabel = getValidatedLabel(codeArray[i], i) 
         addNewLabel(newLabel, location, i);
+        continue;
       }
-      else { location += 2 }
+      location += 2; 
+      labelStrippedCodeArray.push(codeArray[i]);
     }
+    return labelStrippedCodeArray;
   }
  
   stripCommentsAndEmptyLines(codeArray) {
@@ -131,5 +136,12 @@ let assembler = class {
     this.errorFlag = true;
     return;
   }
+
+  reset() {
+    this.errorFlag = false;
+    this.assembledCode = [];
+    this.labels = {}
+  }
+
 }
 export default assembler
