@@ -14,7 +14,6 @@ group1:
 group2:
 mov r3,#02
 ldr r4,$03
-cpy r5,r4
   
 ;jump functions
 group3: 

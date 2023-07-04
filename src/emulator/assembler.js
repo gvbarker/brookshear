@@ -5,9 +5,8 @@ let assembler = class {
     this.assembledCode = [];
     this.operations = {
       "LDR":0x1,
-      "MOV":0x2,
       "STR":0x3,
-      "CPY":0x4,
+      "MOV":0x4,
       "ADD":0x5,
       "SUB":0x6,
       "IOR":0x7,
@@ -99,7 +98,7 @@ let assembler = class {
       for (let i = 0; i < registers.length; i++) {
         try {
           if (!registers[i] || registers[i].length > 2) throw `Accessed invalid register "${registers[i]}" in line ${lineNumber}`;
-          validatedRegisters.push(parseInt(registers[i].slice(1), 16));
+          validatedRegisters.push(registers[i].slice(1));
         } 
         catch (err) {
           self.handleErrors(err)
@@ -110,6 +109,7 @@ let assembler = class {
     }
 
     for (let i = 0; i < codeArray.length; i++) {
+      if (this.errorFlag) { return }
       let count = codeArray[i].split(",").length-1;
       const operation = this.getOperation(codeArray[i], i);
       switch(count) {
@@ -119,7 +119,9 @@ let assembler = class {
           if ((codeArray[i].indexOf("#") > -1) || (codeArray[i].indexOf("$") > -1)) throw `Invalid operand usage for operation "${operation}" in line ${i}`;
           let regs = codeArray[i].slice(codeArray[i].indexOf("r", 3), codeArray[i].length)
           regs = getValidatedRegisters(i, regs.split(","));
-          console.log(regs)
+          this.assembledCode.push(this.operations[operation] + regs[0])
+          this.assembledCode.push(regs[1] + regs[2])
+          console.log(this.assembledCode)
         }
         catch(err) {
           this.handleErrors(err)
