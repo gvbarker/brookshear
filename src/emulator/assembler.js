@@ -3,7 +3,7 @@ let assembler = class {
     this.unassembledCode = code;
     this.labels = {};
     this.assembledCode = [];
-    this.allOperations = {
+    this.operations = {
       "LDR":0x1,
       "MOV":0x2,
       "STR":0x3,
@@ -15,9 +15,9 @@ let assembler = class {
       "XOR":0x9,
       "ROR":0xA,
       "BEQ":0xB,
-      "HLT":0xC
+      "HLT":0xC,
+      "threeOperandOperations":["ADD", "SUB", "IOR", "AND", "XOR"],
     };
-    this.threeOperandOperations = ["ADD", "SUB", "IOR", "AND", "XOR"];
     this.errorFlag = false; 
   }
 
@@ -29,16 +29,7 @@ let assembler = class {
     let codeArray = this.unassembledCode.split("\n");
     codeArray = this.stripCommentsAndEmptyLines(codeArray);
     codeArray = this.passForLabels(codeArray);
-    console.log(codeArray);
-    for (let i = 0; i < codeArray.length; i++) {
-      if (this.errorFlag) { 
-        this.reset();
-        return 
-      }
-       
-      //this.getOperation(codeArray[i], i)
-    }
-    //codeLineArray = this.convertLines(codeLineArray);
+    codeArray = this.passForInstructions(codeArray);
     this.reset()
   }
 
@@ -55,7 +46,7 @@ let assembler = class {
         return line[0];
       }
       catch(err) {
-        this.handleErrors(err);
+        self.handleErrors(err);
       }
     }
 
@@ -73,7 +64,6 @@ let assembler = class {
     let labelStrippedCodeArray = [];
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { 
-        //this.reset()
         return 
       }
       if (codeArray[i].includes(":")) { 
@@ -89,32 +79,62 @@ let assembler = class {
  
   stripCommentsAndEmptyLines(codeArray) {
     let cleanedCodeArray = [];
-    for (let i of codeArray) {
-      let line = i.trim();
-      const commentStartIndex = line.indexOf(";");
+    for (let i = 0; i < codeArray.length; i++) {
+      const commentStartIndex = codeArray[i].indexOf(";");
       if (commentStartIndex > -1) {
-        line = line.slice(0, commentStartIndex);
-      }        
-      if (line) {
-        cleanedCodeArray.push(line);
+        codeArray[i] = codeArray[i].slice(0, commentStartIndex);
+      }
+      let trimmedLine = codeArray[i].trim()
+      if (trimmedLine) {
+        cleanedCodeArray.push(trimmedLine);
       }
     }
     return cleanedCodeArray
   }
   
-  convertLines(codeArray) {
-    for (let i of codeArray) {
+  passForInstructions(codeArray) {
+    let self = this
+    function getValidatedRegisters(lineNumber, registers) {
+      let validatedRegisters = []
+      for (let i = 0; i < registers.length; i++) {
+        try {
+          if (!registers[i] || registers[i].length > 2) throw `Accessed invalid register "${registers[i]}" in line ${lineNumber}`;
+          validatedRegisters.push(parseInt(registers[i].slice(1), 16));
+        } 
+        catch (err) {
+          self.handleErrors(err)
+          return
+        }
+      }
+      return (validatedRegisters)
+    }
 
-      let count = i.split(",").length-1;
+    for (let i = 0; i < codeArray.length; i++) {
+      let count = codeArray[i].split(",").length-1;
+      const operation = this.getOperation(codeArray[i], i);
       switch(count) {
       case 2:
+        try {
+          if (!this.operations.threeOperandOperations.includes(operation)) throw `Invalid usage of "${operation}" in line ${i}.`;
+          if ((codeArray[i].indexOf("#") > -1) || (codeArray[i].indexOf("$") > -1)) throw `Invalid operand usage for operation "${operation}" in line ${i}`;
+          let regs = codeArray[i].slice(codeArray[i].indexOf("r", 3), codeArray[i].length)
+          regs = getValidatedRegisters(i, regs.split(","));
+          console.log(regs)
+        }
+        catch(err) {
+          this.handleErrors(err)
+          return
+        }
+        break
+      case 1:
+        break;
+      case 0:
         break
       default:
+        this.handleErrors(`Something went wrong in line ${i}`);
         return
-
       }
     }
-    
   }
 
   getOperation(line, lineNumber) {
@@ -122,7 +142,7 @@ let assembler = class {
     let searchReturn = operationRegex.exec(line);
     try {
       if (!searchReturn) throw `No operation found in line ${lineNumber}`
-      const opCheck = searchReturn[0].toUpperCase() in this.allOperations 
+      const opCheck = searchReturn[0].toUpperCase() in this.operations 
       if (!opCheck) throw `Invalid operation in line ${lineNumber}`
     }
     catch(err) {

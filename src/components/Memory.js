@@ -6,9 +6,9 @@ export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
   const testCode = `;3-op functions
 group1:
-add r1,r2,r3
-sub r4,r5,r6 ;testing
-ior r7,r8,r9
+  add r1,r2,r3
+  sub r4,r5,r6 ;testing
+  ior rA,rB,rC
 
 ;2-op functions
 group2:
