@@ -12,7 +12,7 @@ group1:
 
 ;2-op functions
 group2:
-mov r3,#02
+mov r3,r2
 ldr r4,$03
   
 ;jump functions

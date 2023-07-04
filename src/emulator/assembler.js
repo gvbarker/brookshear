@@ -111,7 +111,7 @@ let assembler = class {
       }
       return (validatedRegisters)
     }
-    
+
     function handleThreeOperandOperation(op, line, lineNumber) {
       try{
         const hasImmediate =  (line.indexOf("#") > -1);
@@ -119,7 +119,7 @@ let assembler = class {
 
         if (hasImmediate || hasMemAddr) throw `Invalid operand usage for operation "${op}" in line ${lineNumber}`;
         
-        let regs = line.slice(line.indexOf("r", 3), line.length);
+        let regs = line.slice(line.indexOf("R", 3), line.length);
         regs = getValidatedRegisters(lineNumber, regs.split(","));
         
         self.assembledCode.push(self.ops[op] + regs[0]);
@@ -133,8 +133,16 @@ let assembler = class {
 
     function handleTwoOperandOperation(op, line, lineNumber) {
       try {
-        //test
-      } 
+        const hasImmediate =  (line.indexOf("#") > -1);
+        const hasMemAddr = (line.indexOf("$") > -1);
+        const immediateError = `Invalid usage of immediate value for operation "${op}" in line ${lineNumber}`;
+        const memAddrError = `Invalid usage of memory address for operation "${op}" in line ${lineNumber}`;
+                
+        if (hasImmediate && !self.ops.immediateOps.includes(op)) throw immediateError;
+        if (hasImmediate && line.indexOf("#") < line.indexOf("R", 2)) throw immediateError;
+        if (hasMemAddr && !self.ops.addressOps.includes(op)) throw memAddrError;
+        if (hasMemAddr && line.indexOf("$") < line.indexOf("R", 2)) throw memAddrError; 
+      }
       catch (err) {
         self.handleErrors(err);
         return;
@@ -147,11 +155,11 @@ let assembler = class {
       const operation = this.getOperation(codeArray[i], i);
       switch(count) {
       case 2: {
-        handleThreeOperandOperation(operation, codeArray[i], i);
+        handleThreeOperandOperation(operation, codeArray[i].toUpperCase(), i);
         break;
       }
       case 1: {
-        handleTwoOperandOperation(operation, codeArray[i], i);
+        handleTwoOperandOperation(operation, codeArray[i].toUpperCase(), i);
         break;
       }
       case 0:
