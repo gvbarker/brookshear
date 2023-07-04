@@ -4,7 +4,13 @@ import assembler from "../emulator/assembler"
 
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
-  const testCode = `;3-op functions
+  let emuTest = new assembler()
+
+
+  function handleCLick() {
+    let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
+    let nextCells = assemblerState.slice();
+    const testCode = `;3-op functions
 group1:
   add r1,r2,r3
   sub r4,r5,r6 ;testing
@@ -14,21 +20,21 @@ group1:
 group2:
 mov r3,r2
 ldr r4,$03
+ldr r2, #04
   
 ;jump functions
 group3: 
 beq r1,$03
 beq r9,group1
+
+
+
 hlt`
-  let emuTest = new assembler(testCode)
-
-
-  function handleCLick() {
-    let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
-    let nextCells = assemblerState.slice();
-    
-    for (let i=0; i<newtest.length; i++) {
-      nextCells[i] = newtest[i];
+    emuTest.setCodeToAssemble(testCode);
+    emuTest.assemble();
+    const newCells = emuTest.getAssembledCode()
+    for (let i = 0; i < newCells.length; i++) {
+      nextCells[i] = newCells[i];
     }
     setAssemblerState(nextCells);
   }
@@ -71,7 +77,12 @@ hlt`
         { celltable() }
       </div>
       <button onClick={handleCLick}>handleClick</button>
-      <button onClick={(() => emuTest.assemble())}>assembler</button>
+      <button onClick={(() => 
+        emuTest.assemble()
+
+      )}>
+        assembler
+      </button>
     </>
   );
 }
