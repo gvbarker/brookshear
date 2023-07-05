@@ -56,6 +56,19 @@ let assembler = class {
     return cleanedCodeArray
   }
 
+  #labelPass(codeArray) {
+    let location = 0;
+    let deLabeledCode = [];
+    for (let line of codeArray) {
+      if (line.includes(":")) { 
+        this.#addValidLabel(line, location);
+        continue;
+      }
+      location += 2; 
+      deLabeledCode.push(line);
+    }
+    return deLabeledCode;
+  }
   #addValidLabel(label, location) {
     label = label.split(":");
     const syntaxChecks = {
@@ -70,44 +83,26 @@ let assembler = class {
     while (location.length < 2) { location = "0" + location; }
     this.labels[label] = location;
   }
-  
-  #labelPass(codeArray) {
-    let location = 0;
-    let labelStrippedCodeArray = [];
-    for (let line of codeArray) {
-      if (line.includes(":")) { 
-        this.#addValidLabel(line, location);
-        continue;
-      }
-      location += 2; 
-      labelStrippedCodeArray.push(line);
-    }
-    return labelStrippedCodeArray;
-  }
- 
+
   #getValidOperands(operands) {
-    let validatedOperands = []
+    let validOperands = []
     for (let operand of operands) {
       if (operand[0] === "R") {
-        validatedOperands.push(this.#getValidRegister(operand))
+        validOperands.push(this.#getValidRegister(operand))
         continue;
       }
-      validatedOperands.push(this.#getValidNumeric(operand));  
+      validOperands.push(this.#getValidNumeric(operand));  
     }
-    return (validatedOperands); 
+    return (validOperands); 
   }
   #getValidRegister(reg) {
     reg = reg.trim()
-    try {
-      if (!reg || reg.length > 2) throw new Error(`Accessed invalid register "${reg}"`);
-      return (reg.slice(1));
-    } 
-    catch (err) {
-      this.#handleErrors(err)
-      return
+    const syntaxChecks = {
+      [`Accessed invalid register "${reg}"`]: (!reg || reg.length > 2)
     }
+    this.#handleSyntaxErrors(syntaxChecks);
+    return (reg.slice(1));
   }
-
   #getValidNumeric(num) {
     num = num.trim()
     try {
