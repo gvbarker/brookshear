@@ -121,22 +121,17 @@ let assembler = class {
   
   
   #handleThreeOps(op, line) {
-    try{
-      const hasImm =  (line.indexOf("#") > -1);
-      const hasAddr = (line.indexOf("$") > -1);
-      if (hasImm || hasAddr) throw new Error(`Invalid operand usage for operation "${op}"`);
-      
-      let regs = line.slice(line.indexOf("R", 3), line.length);
-      regs = this.#getValidOperands(regs.split(","));
-      this.assembledCode.push(this.OPS[op] + regs[0]);
-      this.assembledCode.push(regs[1] + regs[2]);
-    }
-    catch(err) {
-      this.#handleErrors(err);
-      return;
-    }
+    const hasImm =  (line.indexOf("#") > -1);
+    const hasAddr = (line.indexOf("$") > -1);
+    const syntaxChecks = {
+      [`Invalid operand usage for operation "${op}"`]: (hasImm || hasAddr)
+    };
+    this.#handleSyntaxErrors(syntaxChecks);
+    let regs = line.slice(line.indexOf("R", 3), line.length);
+    regs = this.#getValidOperands(regs.split(","));
+    this.assembledCode.push(this.OPS[op] + regs[0]);
+    this.assembledCode.push(regs[1] + regs[2]);
   }
-
   #handleTwoOps(op, line) {
     const hasImm =  (line.indexOf("#") > -1);
     const hasAddr = (line.indexOf("$") > -1);
@@ -180,8 +175,7 @@ let assembler = class {
     default:
       this.assembledCode.push(this.OPS[op] + operands[0]);
       this.assembledCode.push(operands[1] + operands[2]);
-    }
-    
+    } 
   }
 
   #handleNoOp(op, line) {
