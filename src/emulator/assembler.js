@@ -31,7 +31,7 @@ let assembler = class {
   reset() {
     this.errorFlag = false;
     this.assembledCode = [];
-    this.labels = {}
+    this.labels = {};
   }
 
   assemble() {
@@ -48,12 +48,12 @@ let assembler = class {
       if (commentStartIndex > -1) { 
         codeArray[i] = codeArray[i].slice(0, commentStartIndex);
       }
-      let trimmedLine = codeArray[i].trim()
+      let trimmedLine = codeArray[i].trim();
       if (trimmedLine) {
         cleanedCodeArray.push(trimmedLine);
       }
     }
-    return cleanedCodeArray
+    return cleanedCodeArray;
   }
 
   #labelPass(codeArray) {
@@ -76,8 +76,8 @@ let assembler = class {
       [`Cannot have blank label: ${label}`]: (!label[0]),
       [`Cannot have spaces in label declaration: ${label}`]: (label[0].search(" ") > -1),
       [`Cannot have duplicate labels: ${label}`]: (label[0] in this.labels)
-    }
-    this.#handleSyntaxErrors(syntaxChecks)
+    };
+    this.#handleSyntaxErrors(syntaxChecks);
     label = label[0];
     location = location.toString();
     while (location.length < 2) { location = "0" + location; }
@@ -85,10 +85,10 @@ let assembler = class {
   }
 
   #getValidOperands(operands) {
-    let validOperands = []
+    let validOperands = [];
     for (let operand of operands) {
       if (operand[0] === "R") {
-        validOperands.push(this.#getValidRegister(operand))
+        validOperands.push(this.#getValidRegister(operand));
         continue;
       }
       validOperands.push(this.#getValidNumeric(operand));  
@@ -96,30 +96,46 @@ let assembler = class {
     return (validOperands); 
   }
   #getValidRegister(reg) {
-    reg = reg.trim()
+    reg = reg.trim();
     const syntaxChecks = {
       [`Accessed invalid register "${reg}"`]: (!reg || reg.length > 2)
-    }
+    };
     this.#handleSyntaxErrors(syntaxChecks);
     return (reg.slice(1));
   }
   #getValidNumeric(num) {
-    num = num.trim()
+    num = num.trim();
     try {
       if (!num || num.length > 3) throw new Error(`Accessed invalid value "${num}"`);
       return (num.slice(1,3));
     } 
     catch (err) {
       if (num in this.labels) { return (this.labels[num]); }
-      this.#handleErrors(err)
-      return
+      this.#handleErrors(err);
+      return;
     }
   }
 
-
-    
-  
-  
+  #instructionPass(codeArray) {
+    for (let line of codeArray) {
+      let count = line.split(",").length-1;
+      const operation = this.#getOperation(line);
+      switch(count) {
+      case 2: 
+        this.#handleThreeOps(operation, line);
+        break;
+      case 1: 
+        this.#handleTwoOps(operation, line);
+        break;
+      case 0:
+        this.#handleNoOp(operation, line);
+        break;
+      default:
+        this.#handleErrors("Something went wrong...");
+        return;
+      }
+    }
+  }
   #handleThreeOps(op, line) {
     const hasImm =  (line.indexOf("#") > -1);
     const hasAddr = (line.indexOf("$") > -1);
@@ -145,7 +161,7 @@ let assembler = class {
       [`Invalid usage of memory address for operation "${op}"`]: (hasAddr && !this.OPS.addrs.includes(op)),
       [`Invalid order of immediate value for operation "${op}"`]: (hasAddr && line.indexOf("$") < line.indexOf("R", 3)),
       [`Invalid number of registers for operation "${op}"`]: (this.OPS.addrs.includes(op) && registerCount > 1)
-    }
+    };
     this.#handleSyntaxErrors(syntaxChecks);
     let operands = line.slice(line.indexOf("R", 3), line.length);
     operands = this.#getValidOperands(operands.split(","));
@@ -177,48 +193,21 @@ let assembler = class {
       this.assembledCode.push(operands[1] + operands[2]);
     } 
   }
-
   #handleNoOp(op, line) {
     const syntaxChecks = { [`Invalid usage of ${op}`]: (line.trim() !== "HLT") };
-    this.#handleSyntaxErrors(syntaxChecks)
+    this.#handleSyntaxErrors(syntaxChecks);
     this.assembledCode.push(this.OPS[op] + "0");
     this.assembledCode.push("00");
-    
   }
-
-  #instructionPass(codeArray) {
-    for (let line of codeArray) {
-      let count = line.split(",").length-1;
-      const operation = this.#getOperation(line);
-      switch(count) {
-      case 2: 
-        this.#handleThreeOps(operation, line);
-        break;
-      case 1: 
-        this.#handleTwoOps(operation, line);
-        break;
-      case 0:
-        this.#handleNoOp(operation, line);
-        break
-      default:
-        this.#handleErrors("Something went wrong...");
-        return
-      }
-    }
-  }
-
   #getOperation(line) {
-    const operationRegex = /([A-Z]{3}|[A-Z][a-z]{2}|[a-z]{3})/
+    const operationRegex = /([A-Z]{3}|[A-Z][a-z]{2}|[a-z]{3})/;
     let operation = operationRegex.exec(line);
-    try {
-      if (!operation) throw new Error(`No operation found in line ${line}`);
-      const opCheck = operation[0].toUpperCase() in this.OPS 
-      if (!opCheck) throw new Error(`Invalid operation in line ${line}`);
-    }
-    catch(err) {
-      this.#handleErrors(err)
-    }
-    return operation[0].toUpperCase();
+    const syntaxChecks = {
+      [`No operation found in line ${line}`]: !(operation),
+      [`Invalid operation in line ${line}`]: !(operation[0] in this.OPS)
+    };
+    this.#handleSyntaxErrors(syntaxChecks);
+    return operation[0];
   }
 
   #handleSyntaxErrors(err) {
@@ -231,13 +220,11 @@ let assembler = class {
       }
     }
   }
-
   #handleErrors(err) {
     alert(err);
     this.errorFlag = true;
-    this.reset()
+    this.reset();
     throw new Error("Error in assembly, stopping script.");
   }
-
-}
-export default assembler
+};
+export default assembler;

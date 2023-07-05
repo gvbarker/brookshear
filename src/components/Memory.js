@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
-import assembler from "../emulator/assembler"
+import assembler from "../emulator/assembler";
 
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
-  let emuTest = new assembler()
+  let emuTest = new assembler();
 
 
   function handleCLick() {
