@@ -12,7 +12,7 @@ export default function Memory({ data }) {
     let nextCells = assemblerState.slice();
     const testCode = `;3-op functions
 group1:
-  add r1,r2,r3
+  add r1,r2,r1
   sub r4,r5,r6 ;testing
   ior rA,rB,rC
 
@@ -26,9 +26,6 @@ ldr r2, #04
 group3: 
 beq r1,$03
 beq r9,group1
-
-
-
 hlt`
     emuTest.setCodeToAssemble(testCode);
     emuTest.assemble();

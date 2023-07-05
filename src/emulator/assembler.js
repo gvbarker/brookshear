@@ -1,9 +1,9 @@
 let assembler = class {
   constructor(code="") {
-    this.unassembledCode = code;
+    this.unassembledCode = code.toUpperCase();
     this.labels = {};
     this.assembledCode = [];
-    this.ops = {
+    this.OPS = {
       "LDR":"1",
       "STR":"3",
       "MOV":"4",
@@ -15,16 +15,16 @@ let assembler = class {
       "ROR":"A",
       "BEQ":"B",
       "HLT":"C",
-      "threeOperandOps":["ADD", "SUB", "IOR", "AND", "XOR"],
-      "twoOperandOps":["LDR", "STR", "MOV", "ROR", "BEQ"],
-      "oneOperandOps":["HLT"],
-      "immediateOps":["LDR", "ROR"],
-      "addressOps":["LDR", "STR", "BEQ"]
+      "threeOps":["ADD", "SUB", "IOR", "AND", "XOR"],
+      "twoOps":["LDR", "STR", "MOV", "ROR", "BEQ"],
+      "noOps":["HLT"],
+      "imms":["LDR", "ROR"],
+      "addrs":["LDR", "STR", "BEQ"]
     };
     this.errorFlag = false; 
   }
 
-  setCodeToAssemble(code) { this.unassembledCode = code }
+  setCodeToAssemble(code) { this.unassembledCode = code.toUpperCase(); }
 
   getAssembledCode() { return (this.assembledCode); }
 
@@ -36,61 +36,16 @@ let assembler = class {
 
   assemble() {
     let codeArray = this.unassembledCode.split("\n");
-    codeArray = this.#stripCommentsAndEmptyLines(codeArray);
-    codeArray = this.#passForLabels(codeArray);
-    this.#passForInstructions(codeArray);
+    codeArray = this.#stripCommentsAndEmpties(codeArray);
+    codeArray = this.#labelPass(codeArray);
+    this.#instructionPass(codeArray);
   }
 
-  #passForLabels(codeArray) {
-    let self = this
-    function getValidatedLabel(line) {
-      line = line.split(":");
-      let labelError = `Invalid label: ${line}`
-      try { 
-        if (line.length > 2  || line[1].length) throw labelError;
-        if (!line[0]) throw labelError;
-        if (line[0].search(" ") > -1) throw labelError;
-        return line[0].toUpperCase();
-      }
-      catch(err) {
-        self.#handleErrors(err);
-      }
-    }
-
-    function addNewLabel(label, location) {
-      try{
-        if (label in self.labels) throw `Duplicate label: ${label}`;
-        location = location.toString();
-        while (location.length < 2) { location = "0" + location; }
-        self.labels[label] = location;
-      }
-      catch(err) {
-        self.#handleErrors(err);
-      }
-    }
-
-    let location = 0;
-    let labelStrippedCodeArray = [];
-    for (let i = 0; i < codeArray.length; i++) {
-      if (this.errorFlag) { 
-        return 
-      }
-      if (codeArray[i].includes(":")) { 
-        const newLabel = getValidatedLabel(codeArray[i], i) 
-        addNewLabel(newLabel, location, i);
-        continue;
-      }
-      location += 2; 
-      labelStrippedCodeArray.push(codeArray[i]);
-    }
-    return labelStrippedCodeArray;
-  }
- 
-  #stripCommentsAndEmptyLines(codeArray) {
+  #stripCommentsAndEmpties(codeArray) {
     let cleanedCodeArray = [];
     for (let i = 0; i < codeArray.length; i++) {
       const commentStartIndex = codeArray[i].indexOf(";");
-      if (commentStartIndex > -1) {
+      if (commentStartIndex > -1) { 
         codeArray[i] = codeArray[i].slice(0, commentStartIndex);
       }
       let trimmedLine = codeArray[i].trim()
@@ -100,144 +55,186 @@ let assembler = class {
     }
     return cleanedCodeArray
   }
+
+  #getValidLabel(line) {
+    line = line.split(":");
+    let labelError = `Invalid label: ${line}`
+    try { 
+      if (line.length > 2  || line[1].length) throw labelError;
+      if (!line[0]) throw labelError;
+      if (line[0].search(" ") > -1) throw labelError;
+      return line[0].toUpperCase();
+    }
+    catch(err) {
+      this.#handleErrors(err);
+    }
+  }
+  #addLabel(label, location) {
+    try{
+      if (label in this.labels) throw new Error(`Duplicate label: ${label}`);
+      location = location.toString();
+      while (location.length < 2) { location = "0" + location; }
+      this.labels[label] = location;
+    }
+    catch(err) {
+      this.#handleErrors(err);
+    }
+  }
+  #labelPass(codeArray) {
+    let location = 0;
+    let labelStrippedCodeArray = [];
+    for (let i = 0; i < codeArray.length; i++) {
+      if (this.errorFlag) { return }
+      if (codeArray[i].includes(":")) { 
+        const newLabel = this.#getValidLabel(codeArray[i], i) 
+        this.#addLabel(newLabel, location, i);
+        continue;
+      }
+      location += 2; 
+      labelStrippedCodeArray.push(codeArray[i]);
+    }
+    return labelStrippedCodeArray;
+  }
+ 
+  #getValidOperands(operands) {
+    let validatedOperands = []
+    for (let operand of operands) {
+      if (operand[0] === "R") {
+        validatedOperands.push(this.#getValidRegister(operand))
+        continue;
+      }
+      validatedOperands.push(this.#getValidNumeric(operand));  
+    }
+    return (validatedOperands); 
+  }
+  #getValidRegister(reg) {
+    reg = reg.trim()
+    try {
+      console.log(reg)
+      if (!reg || reg.length > 2) throw new Error(`Accessed invalid register "${reg}"`);
+      return (reg.slice(1));
+    } 
+    catch (err) {
+      this.#handleErrors(err)
+      return
+    }
+  }
+
+  #getValidNumeric(num) {
+    num = num.trim()
+    try {
+      if (!num || num.length > 3) throw new Error(`Accessed invalid value "${num}"`);
+      return (num.slice(1,3));
+    } 
+    catch (err) {
+      if (num in this.labels) { return (this.labels[num]); }
+      this.#handleErrors(err)
+      return
+    }
+  }
+
+
+    
   
-  #passForInstructions(codeArray) {
-    let self = this
-    function getValidatedOperands(operands) {
-      let validatedOperands = []
-      for (let i = 0; i < operands.length; i++) {
-        if (operands[i].slice(0) === "R") {
-          validatedOperands.push(getValidRegister(operands[i]));
-        }
-        else {
-          validatedOperands.push(getValidNumeric(operands[i]));  
-        }
-      }
-      return (validatedOperands); 
+  
+  #handleThreeOps(op, line) {
+    try{
+      console.log(op, line)
+      const hasImm =  (line.indexOf("#") > -1);
+      const hasAddr = (line.indexOf("$") > -1);
+      if (hasImm || hasAddr) throw new Error(`Invalid operand usage for operation "${op}"`);
+      
+      let regs = line.slice(line.indexOf("R", 3), line.length);
+      regs = this.#getValidOperands(regs.split(","));
+      this.assembledCode.push(this.OPS[op] + regs[0]);
+      this.assembledCode.push(regs[1] + regs[2]);
     }
-
-    function getValidRegister(register) {
-      register = register.trim()
-      try {
-        if (!register || register.length > 2) throw `Accessed invalid register "${register}"`;
-        return (register.slice(1));
-      } 
-      catch (err) {
-        self.#handleErrors(err)
-        return
-      }
+    catch(err) {
+      this.#handleErrors(err);
+      return;
     }
+  }
 
-    function getValidNumeric(numeric) {
-      numeric = numeric.trim()
-      try {
-        if (!numeric || numeric.length > 3) throw `Accessed invalid numeric value "${numeric}"`;
-        return (numeric.slice(1,3));
-      } 
-      catch (err) {
-        if (numeric in self.labels) { return (self.labels[numeric]); }
-        self.#handleErrors(err)
-        return
-      }
-    }
+  #handleTwoOps(op, line) {
+    try {
+      const hasImm =  (line.indexOf("#") > -1);
+      const hasAddr = (line.indexOf("$") > -1);
+      const immError = `Invalid usage of immediate value for operation "${op}"`;
 
-    function handleThreeOperandOperation(op, line) {
-      try{
-        const hasImmediate =  (line.indexOf("#") > -1);
-        const hasMemAddr = (line.indexOf("$") > -1);
-        if (hasImmediate || hasMemAddr) throw `Invalid operand usage for operation "${op}"`;
-        
-        let regs = line.slice(line.indexOf("R", 3), line.length);
-        regs = getValidatedOperands(regs.split(","));
-        self.assembledCode.push(self.ops[op] + regs[0]);
-        self.assembledCode.push(regs[1] + regs[2]);
-      }
-      catch(err) {
-        self.#handleErrors(err);
+      const addrError = `Invalid usage of memory address for operation "${op}"`;
+      if (hasImm && !this.OPS.imms.includes(op)) throw immError;
+      if (hasImm && line.indexOf("#") < line.indexOf("R", 3)) throw immError;
+      if (this.OPS.imms.includes(op) && [...line.matchAll(/(r([0-9]|[a-f]|[A-F]))/gi)].length > 1) throw immError
+
+      if (hasAddr && !this.OPS.addrs.includes(op)) throw addrError;
+      if (hasAddr && line.indexOf("$") < line.indexOf("R", 3)) throw addrError; 
+      if (this.OPS.addrs.includes(op) && [...line.matchAll(/(r([0-9]|[a-f]|[A-F]))/gi)].length > 1) throw addrError
+      let operands = line.slice(line.indexOf("R", 3), line.length);
+      operands = this.#getValidOperands(operands.split(","));
+      if (op === "LDR" && hasAddr) { 
+        this.assembledCode.push(this.OPS[op] + operands[0]);
+        this.assembledCode.push(operands[1]);
         return;
       }
-    }
-
-    function handleTwoOperandOperation(op, line) {
-      try {
-        const hasImmediate =  (line.indexOf("#") > -1);
-        const hasMemAddr = (line.indexOf("$") > -1);
-        const immediateError = `Invalid usage of immediate value for operation "${op}"`;
-
-        const memAddrError = `Invalid usage of memory address for operation "${op}"`;
-        console.log(line)        
-        if (hasImmediate && !self.ops.immediateOps.includes(op)) throw immediateError;
-        if (hasImmediate && line.indexOf("#") < line.indexOf("R", 3)) throw immediateError;
-        if (self.ops.immediateOps.includes(op) && [...line.matchAll(/(r([0-9]|[a-f]|[A-F]))/gi)].length > 1) throw immediateError
-
-        if (hasMemAddr && !self.ops.addressOps.includes(op)) throw memAddrError;
-        if (hasMemAddr && line.indexOf("$") < line.indexOf("R", 3)) throw memAddrError; 
-        if (self.ops.addressOps.includes(op) && [...line.matchAll(/(r([0-9]|[a-f]|[A-F]))/gi)].length > 1) throw memAddrError
-        let operands = line.slice(line.indexOf("R", 3), line.length);
-        operands = getValidatedOperands(operands.split(","));
-        if (op === "LDR" && hasMemAddr) { 
-          self.assembledCode.push(self.ops[op] + operands[0]);
-          self.assembledCode.push(operands[1]);
-          return;
-        }
-        if (op === "LDR" && hasImmediate) { 
-          self.assembledCode.push(0x2 + operands[0]);
-          self.assembledCode.push(operands[1]);
-          return;
-        }
-        if (op === "MOV") {
-          self.assembledCode.push(self.ops[op] + "0");
-          self.assembledCode.push(operands[0] + operands[1]);
-          return
-        }
-        if (op === "ROR") {
-          self.assembledCode.push(self.ops[op] + operands[0]);
-          self.assembledCode.push("0" + operands[1]);
-          return;
-        }
-        if (op === "BEQ") {
-          self.assembledCode.push(self.ops[op] + operands[0]);
-          self.assembledCode.push(operands[1]);
-          return;
-        }
-
-        self.assembledCode.push(self.ops[op] + operands[0]);
-        self.assembledCode.push(operands[1] + operands[2]);
-
-      }
-      catch (err) {
-        self.#handleErrors(err);
+      if (op === "LDR" && hasImm) { 
+        this.assembledCode.push(0x2 + operands[0]);
+        this.assembledCode.push(operands[1]);
         return;
       }
-    }
-
-    function handleSingleOperandOperation(op, line) {
-      try {
-        if (line.trim() !== "HLT") throw `Invalid usage of ${op}`; 
-        self.assembledCode.push(self.ops[op] + "0");
-        self.assembledCode.push("00");
-      }
-      catch(err) {
-        self.#handleErrors(err);
+      if (op === "MOV") {
+        this.assembledCode.push(this.OPS[op] + "0");
+        this.assembledCode.push(operands[0] + operands[1]);
         return
       }
-    }
+      if (op === "ROR") {
+        this.assembledCode.push(this.OPS[op] + operands[0]);
+        this.assembledCode.push("0" + operands[1]);
+        return;
+      }
+      if (op === "BEQ") {
+        this.assembledCode.push(this.OPS[op] + operands[0]);
+        this.assembledCode.push(operands[1]);
+        return;
+      }
 
+      this.assembledCode.push(this.OPS[op] + operands[0]);
+      this.assembledCode.push(operands[1] + operands[2]);
+
+    }
+    catch (err) {
+      this.#handleErrors(err);
+      return;
+    }
+  }
+
+  #handleNoOp(op, line) {
+    try {
+      if (line.trim() !== "HLT") throw new Error(`Invalid usage of ${op}`); 
+      this.assembledCode.push(this.OPS[op] + "0");
+      this.assembledCode.push("00");
+    }
+    catch(err) {
+      this.#handleErrors(err);
+      return
+    }
+  }
+
+  #instructionPass(codeArray) {
     for (let i = 0; i < codeArray.length; i++) {
       if (this.errorFlag) { return; }
       let count = codeArray[i].split(",").length-1;
       const operation = this.#getOperation(codeArray[i], i);
       switch(count) {
       case 2: {
-        handleThreeOperandOperation(operation, codeArray[i].toUpperCase(), i);
+        this.#handleThreeOps(operation, codeArray[i]);
         break;
       }
       case 1: {
-        handleTwoOperandOperation(operation, codeArray[i].toUpperCase(), i);
+        this.#handleTwoOps(operation, codeArray[i]);
         break;
       }
       case 0:
-        handleSingleOperandOperation(operation, codeArray[i].toUpperCase(), i);
+        this.#handleNoOp(operation, codeArray[i]);
         break
       default:
         this.#handleErrors("Something went wrong...");
@@ -248,23 +245,32 @@ let assembler = class {
 
   #getOperation(line) {
     const operationRegex = /([A-Z]{3}|[A-Z][a-z]{2}|[a-z]{3})/
-    let searchReturn = operationRegex.exec(line);
+    let operation = operationRegex.exec(line);
     try {
-      if (!searchReturn) throw `No operation found in line ${line}`
-      const opCheck = searchReturn[0].toUpperCase() in this.ops 
-      if (!opCheck) throw `Invalid operation in line ${line}`
+      if (!operation) throw new Error(`No operation found in line ${line}`);
+      const opCheck = operation[0].toUpperCase() in this.OPS 
+      if (!opCheck) throw new Error(`Invalid operation in line ${line}`);
     }
     catch(err) {
       this.#handleErrors(err)
     }
-    return searchReturn[0].toUpperCase();
+    return operation[0].toUpperCase();
+  }
+
+  #handleSyntaxErrors(err) {
+    if (err.condition) {
+      alert(err.cond);
+      this.errorFlag = true;
+      this.reset();
+      throw new Error("Error in assembler, stopping script.");
+    }
   }
 
   #handleErrors(err) {
     alert(err);
     this.errorFlag = true;
     this.reset()
-    throw new Error("Error in assembly, stopping.");
+    throw new Error("Error in assembly, stopping script.");
   }
 
 }
