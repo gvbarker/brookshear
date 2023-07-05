@@ -187,20 +187,18 @@ let assembler = class {
   }
 
   #instructionPass(codeArray) {
-    for (let i = 0; i < codeArray.length; i++) {
-      let count = codeArray[i].split(",").length-1;
-      const operation = this.#getOperation(codeArray[i], i);
+    for (let line of codeArray) {
+      let count = line.split(",").length-1;
+      const operation = this.#getOperation(line);
       switch(count) {
-      case 2: {
-        this.#handleThreeOps(operation, codeArray[i]);
+      case 2: 
+        this.#handleThreeOps(operation, line);
         break;
-      }
-      case 1: {
-        this.#handleTwoOps(operation, codeArray[i]);
+      case 1: 
+        this.#handleTwoOps(operation, line);
         break;
-      }
       case 0:
-        this.#handleNoOp(operation, codeArray[i]);
+        this.#handleNoOp(operation, line);
         break
       default:
         this.#handleErrors("Something went wrong...");
