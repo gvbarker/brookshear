@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
-import assembler from "../emulator/assembler"
+import assembler from "../emulator/assembler";
 
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
-  let emuTest = new assembler()
+  let emuTest = new assembler();
 
 
   function handleCLick() {
@@ -12,7 +12,7 @@ export default function Memory({ data }) {
     let nextCells = assemblerState.slice();
     const testCode = `;3-op functions
 group1:
-  add r1,r2,r3
+  add r1,r2,r1
   sub r4,r5,r6 ;testing
   ior rA,rB,rC
 
@@ -21,14 +21,10 @@ group2:
 mov r3,r2
 ldr r4,$03
 ldr r2, #04
-  
 ;jump functions
 group3: 
 beq r1,$03
 beq r9,group1
-
-
-
 hlt`
     emuTest.setCodeToAssemble(testCode);
     emuTest.assemble();
