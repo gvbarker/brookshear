@@ -1,5 +1,5 @@
 let assembler = class {
-  constructor(code="") {
+  constructor(code="", ramOnly=false) {
     this.unassembledCode = code.toUpperCase();
     this.labels = {};
     this.assembledCode = [];
@@ -21,6 +21,7 @@ let assembler = class {
       "imms":["LDR", "ROR"],
       "addrs":["LDR", "STR", "BEQ"]
     };
+    this.ramOnly = ramOnly;
     this.errorFlag = false; 
   }
 
@@ -117,6 +118,11 @@ let assembler = class {
   }
 
   #instructionPass(codeArray) {
+    const syntaxChecks = {
+      ["You have exceeded the number of allowed commands for all-RAM assembly."]: (this.ramOnly && this.assembledCode.length > 256),
+      ["You have exceeded the number of allowed commands for auxiliary-included assembly."]: (!this.ramOnly && this.assembledCode.length > null)
+    };
+    this.#handleSyntaxErrors(syntaxChecks);
     for (let line of codeArray) {
       let count = line.split(",").length-1;
       const operation = this.#getOperation(line);

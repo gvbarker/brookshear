@@ -5,7 +5,7 @@ import assembler from "../emulator/assembler";
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
   let emuTest = new assembler();
-
+  let reader = new FileReader
 
   function handleCLick() {
     let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
@@ -25,7 +25,7 @@ ldr r2, #04
 group3: 
 beq r1,$03
 beq r9,group1
-hlt`
+hlt`;
     emuTest.setCodeToAssemble(testCode);
     emuTest.assemble();
     const newCells = emuTest.getAssembledCode()
