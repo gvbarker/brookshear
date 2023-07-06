@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import assembler from "../emulator/assembler";
+import testASM from "../emulator/testasm";
 
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
   let emuTest = new assembler();
-  let reader = new FileReader
 
   function handleCLick() {
     let newtest = ["51", "23", "64", "56", "77", "89", "23", "02", "14", "03", "40", "54", "b1", "03", "b9", "01", "C0", "00"];
     let nextCells = assemblerState.slice();
+    
     const testCode = `;3-op functions
 group1:
   add r1,r2,r1
@@ -26,7 +27,7 @@ group3:
 beq r1,$03
 beq r9,group1
 hlt`;
-    emuTest.setCodeToAssemble(testCode);
+    emuTest.setCodeToAssemble(testASM.code);
     emuTest.assemble();
     const newCells = emuTest.getAssembledCode()
     for (let i = 0; i < newCells.length; i++) {

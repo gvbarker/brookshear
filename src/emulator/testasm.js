@@ -1,4 +1,4 @@
-;3-op functions
+let testASM = {code:`;3-op functions
 group1:
 add r1,r2,r1
 sub r4,r5,r6 ;testing
@@ -13,3 +13,5 @@ group3:
 beq r1,$03
 beq r9,group1
 hlt`
+};
+export default testASM;
