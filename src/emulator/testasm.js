@@ -1,4 +1,5 @@
-let testASM = {code:`;3-op functions
+let testASM = {
+  assemblercode:`;3-op functions
 group1:
 add r1, r2, r1
 sub r4, r5, r6 ;testing
@@ -12,6 +13,13 @@ ldr r2, #04
 group3: 
 beq r1,$03
 beq r9,group1
-hlt`
+hlt`,
+  cpucode: `
+group1:
+  ldr r0, #05
+  ldr r1, #04
+  add r2, r0, r1
+  str r2, $ff
+  hlt`
 };
 export default testASM;

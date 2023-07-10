@@ -1,4 +1,5 @@
 import opcodes from "./opcodes";
+//TODO: ADD FLAGS, ADD USER ERROR HANDLING
 let cpu = class{
   constructor(memory, ramOnly = true) {
     this.startingMem = memory;
@@ -14,7 +15,7 @@ let cpu = class{
   setProg(program) {
     //checks for program matching proper length (all ram vs aux included)
   }
-
+  getNewMem() { return this.startingMem; }
   run() {
    
     for (let i=0; i < this.startingMem.length; i+=2) {
@@ -28,16 +29,10 @@ let cpu = class{
         this.registers[reg] = valAtAddr;
         break;
       }
-      case opcodes["LDR"]+1: { 
+      case "2": { 
         const reg = parseInt(instr[1], 16);
         const immediate = parseInt(params, 16);
         this.registers[reg] = immediate;
-        break;
-      }
-      case opcodes["MOV"]: {
-        const reg1 = parseInt(params[0], 16);
-        const reg2 = parseInt(params[1], 16);
-        this.registers[reg1] = this.registers[reg2];
         break;
       }
       case opcodes["STR"]: {
@@ -46,27 +41,67 @@ let cpu = class{
         this.startingMem[addr] = this.registers[reg];
         break;
       }
-      case opcodes["CPY"]:
-        break;
-      case opcodes["ADD"]:
-        break;
-      case opcodes["SUB"]:
-        break;
-      case opcodes["IOR"]:
-        break;
-      case opcodes["AND"]:
-        break;
-      case opcodes["XOR"]:
-        break;
-      case opcodes["ROT"]:
-        break;
-      case opcodes["BEQ"]:
-        break;
-      case opcodes["HLT"]:
+      case opcodes["MOV"]: {
+        const reg1 = parseInt(params[0], 16);
+        const reg2 = parseInt(params[1], 16);
+        this.registers[reg1] = this.registers[reg2];
         break;
       }
+      case opcodes["ADD"]: {
+        const resReg = parseInt(instr[1], 16);
+        const opReg1 = parseInt(params[0], 16);
+        const opReg2 = parseInt(params[1], 16);
+        let result = (this.registers[opReg1] + this.registers[opReg2]).toString(16); 
+        while (result.length < 2) { result = "0" + result; }
+        this.registers[resReg] = result; 
+        break;
+      }
+      case opcodes["SUB"]: {
+        const resReg = parseInt(instr[1], 16);
+        const opReg1 = parseInt(params[0], 16);
+        const opReg2 = parseInt(params[1], 16);
+        this.registers[resReg] = this.registers[opReg1] - this.registers[opReg2];
+        break;
+      }
+      case opcodes["IOR"]: {
+        const resReg = parseInt(instr[1], 16);
+        const opReg1 = parseInt(params[0], 16);
+        const opReg2 = parseInt(params[1], 16);
+        this.registers[resReg] = this.registers[opReg1] | this.registers[opReg2]; 
+        break;
+      }
+      case opcodes["AND"]: {
+        const resReg = parseInt(instr[1], 16);
+        const opReg1 = parseInt(params[0], 16);
+        const opReg2 = parseInt(params[1], 16);
+        this.registers[resReg] = this.registers[opReg1] & this.registers[opReg2];
+        break;
+      }
+      case opcodes["XOR"]: {
+        const resReg = parseInt(instr[1], 16);
+        const opReg1 = parseInt(params[0], 16);
+        const opReg2 = parseInt(params[1], 16);
+        this.registers[resReg] = this.registers[opReg1] ^ this.registers[opReg2];
+        break;
+      }
+      case opcodes["ROT"]: {
+        const reg = parseInt(instr[1], 16);
+        const numRot = parseInt(params[1], 16);
+        const val = this.registers[reg];
+        this.registers[reg] = (val << numRot) | (val >>> (8 - numRot)); 
+        break;
+      }
+      case opcodes["BEQ"]: {
+        const reg = parseInt(instr[1], 16);
+        if (!this.registers[reg]) { break; }
+        const addr = parseInt(params, 16);
+        i=addr;
+        break;
+      }
+      case opcodes["HLT"]:
+        return (this.startingMem);
+      }
     }
-    console.log(this.registers);
   }
 };
 export default cpu;

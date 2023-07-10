@@ -166,6 +166,11 @@ let assembler = class {
       this.assembledCode.push(operands[1]);
       break;
     }
+    case "STR": {
+      this.assembledCode.push(this.OPS[op] + operands[0]);
+      this.assembledCode.push(operands[1]);
+      break;
+    }
     case "MOV":
       this.assembledCode.push(this.OPS[op] + "0");
       this.assembledCode.push(operands[0] + operands[1]);
@@ -179,6 +184,7 @@ let assembler = class {
       this.assembledCode.push(operands[1]);
       break;
     default:
+      console.log(op, operands)
       this.assembledCode.push(this.OPS[op] + operands[0]);
       this.assembledCode.push(operands[1] + operands[2]);
     } 
