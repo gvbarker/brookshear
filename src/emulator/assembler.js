@@ -162,7 +162,7 @@ let assembler = class {
         this.assembledCode.push(operands[1]);
         break;
       }
-      this.assembledCode.push(0x2 + operands[0]);
+      this.assembledCode.push("2" + operands[0]);
       this.assembledCode.push(operands[1]);
       break;
     }

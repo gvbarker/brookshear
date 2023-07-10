@@ -29,7 +29,7 @@ beq r9,group1
 hlt`;
     emuTest.setCodeToAssemble(testASM.code);
     emuTest.assemble();
-    const newCells = emuTest.getAssembledCode()
+    const newCells = emuTest.getAssembledCode();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
@@ -42,11 +42,11 @@ hlt`;
       let offsetIndex = i*16;
       newTable[i] = assemblerState.slice(offsetIndex, offsetIndex+16);
     }
-    return (newTable)
+    return (newTable);
   }
 
   function celltable() {  
-    let table = generate16WidthTable()
+    let table = generate16WidthTable();
     return (
       <table>
         <tbody>
@@ -58,14 +58,14 @@ hlt`;
                     <td key={ rowIndex.toString(16)+columnIndex.toString(16) }>
                       <Cell key={ columnIndex.toString(16)+columnValue } value={ columnValue}></Cell>
                     </td>
-                  ]
+                  ];
                 })}
               </tr>
-            ]
+            ];
           })}
         </tbody>
       </table>
-    )
+    );
   }
   
   return (
