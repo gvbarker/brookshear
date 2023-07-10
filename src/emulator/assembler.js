@@ -1,26 +1,11 @@
+import opcodes from "./opcodes";
 let assembler = class {
-  constructor(code="") {
+  constructor(code="", ramOnly=false) {
     this.unassembledCode = code.toUpperCase();
     this.labels = {};
     this.assembledCode = [];
-    this.OPS = {
-      "LDR":"1",
-      "STR":"3",
-      "MOV":"4",
-      "ADD":"5",
-      "SUB":"6",
-      "IOR":"7",
-      "AND":"8",
-      "XOR":"9",
-      "ROR":"A",
-      "BEQ":"B",
-      "HLT":"C",
-      "threeOps":["ADD", "SUB", "IOR", "AND", "XOR"],
-      "twoOps":["LDR", "STR", "MOV", "ROR", "BEQ"],
-      "noOps":["HLT"],
-      "imms":["LDR", "ROR"],
-      "addrs":["LDR", "STR", "BEQ"]
-    };
+    this.OPS = opcodes;
+    this.ramOnly = ramOnly;
     this.errorFlag = false; 
   }
 
@@ -117,6 +102,11 @@ let assembler = class {
   }
 
   #instructionPass(codeArray) {
+    const syntaxChecks = {
+      ["You have exceeded the number of allowed commands for all-RAM assembly."]: (this.ramOnly && this.assembledCode.length > 256),
+      ["You have exceeded the number of allowed commands for auxiliary-included assembly."]: (!this.ramOnly && this.assembledCode.length > null)
+    };
+    this.#handleSyntaxErrors(syntaxChecks);
     for (let line of codeArray) {
       let count = line.split(",").length-1;
       const operation = this.#getOperation(line);
@@ -172,7 +162,12 @@ let assembler = class {
         this.assembledCode.push(operands[1]);
         break;
       }
-      this.assembledCode.push(0x2 + operands[0]);
+      this.assembledCode.push("2" + operands[0]);
+      this.assembledCode.push(operands[1]);
+      break;
+    }
+    case "STR": {
+      this.assembledCode.push(this.OPS[op] + operands[0]);
       this.assembledCode.push(operands[1]);
       break;
     }
@@ -189,6 +184,7 @@ let assembler = class {
       this.assembledCode.push(operands[1]);
       break;
     default:
+      console.log(op, operands)
       this.assembledCode.push(this.OPS[op] + operands[0]);
       this.assembledCode.push(operands[1] + operands[2]);
     } 
