@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
-import Assembler from "./components/Memory";
+import Memory from "./components/Memory";
+import BoxForm from "./components/boxForm";
 
 function App() {
   return (
     <>
-      <Assembler data={Array(256).fill("00")}></Assembler>
+      <BoxForm />
     </>
   );
 }
