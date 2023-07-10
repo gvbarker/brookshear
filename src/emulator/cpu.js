@@ -60,7 +60,9 @@ let cpu = class{
         const resReg = parseInt(instr[1], 16);
         const opReg1 = parseInt(params[0], 16);
         const opReg2 = parseInt(params[1], 16);
-        this.registers[resReg] = this.registers[opReg1] - this.registers[opReg2];
+        let result = (this.registers[opReg1] - this.registers[opReg2]).toString(16); 
+        while (result.length < 2) { result = "0" + result; }
+        this.registers[resReg] = result;
         break;
       }
       case opcodes["IOR"]: {
