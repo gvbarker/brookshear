@@ -16,9 +16,9 @@ beq r9,group1
 hlt`,
   cpucode: `
 group1:
-  ldr r0, #05
-  ldr r1, #04
-  add r2, r0, r1
+  ldr r0, #3d
+  ldr r1, #1f
+  sub r2, r0, r1
   str r2, $ff
   hlt`
 };
