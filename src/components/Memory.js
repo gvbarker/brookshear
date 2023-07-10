@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Cell from "./Cell";
 import assembler from "../emulator/assembler";
 import testASM from "../emulator/testasm";
+import cpu from "../emulator/cpu";
 
 export default function Memory({ data }) {
   const [assemblerState, setAssemblerState] = useState(data);
@@ -73,12 +74,14 @@ hlt`;
       <div>
         { celltable() }
       </div>
-      <button onClick={handleCLick}>handleClick</button>
-      <button onClick={(() => 
-        emuTest.assemble()
+      <button onClick={handleCLick}>assemble</button>
+      <button onClick={(() => {
+        let emucpu = new cpu(assemblerState);
+        emucpu.run();
+      }
 
       )}>
-        assembler
+        cpu testing
       </button>
     </>
   );
