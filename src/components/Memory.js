@@ -67,8 +67,6 @@ export default function Memory({ data }) {
           nextCells[i] = newCells[i];
         }
         setAssemblerState(nextCells);
-        console.log(newCells);
-        console.log(assemblerState);
       }
 
       )}>
