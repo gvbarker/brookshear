@@ -2,7 +2,7 @@ import opcodes from "./opcodes";
 //TODO: ADD FLAGS, ADD USER ERROR HANDLING
 //TODO: WORK IN PROG COUNTER TO EXTERIOR COMPONENTS FOR FREQUENCY
 let cpu = class{
-  constructor(memory, ramOnly = true) {
+  constructor(memory=[], ramOnly = true) {
     this.progMem = memory;
     this.returnMem = memory;
     this.ramOnly = ramOnly;
