@@ -1,7 +1,13 @@
+import { TextField } from "@mui/material";
 import React from "react";
 
-export default function InputBox() {
+export default function InputBox(val, onChange) {
   return (
-    <input type="text" name="assemblerInput" />
+    <TextField
+      multiline
+      placeholder = "Assembly..."
+      rows = { 25 }
+     
+    />
   );
 }
