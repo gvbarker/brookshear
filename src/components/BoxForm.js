@@ -29,14 +29,18 @@ export default function BoxForm() {
     mutateMem("cpu");
   }
   return (
-    <>
+    <div className="">
       <Memory 
         data={memory} 
         onAssemble={(() => onAssemble())}
       />
-      <button onClick={(() => onAssemble())}>Assemble</button>
-      <button onClick={(() => onRun())}>Run</button>
       <InputBox/>
-    </>
+      <button 
+        onClick={(() => onAssemble())}
+      >
+        Assemble
+      </button>
+      <button onClick={(() => onRun())}>Run</button>
+    </div>
   );
 }
