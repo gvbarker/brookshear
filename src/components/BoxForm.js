@@ -29,18 +29,30 @@ export default function BoxForm() {
     mutateMem("cpu");
   }
   return (
-    <div className="">
+    <div className="flex bg-slate-600">
+      <InputBox/>
       <Memory 
         data={memory} 
         onAssemble={(() => onAssemble())}
       />
-      <InputBox/>
-      <button 
-        onClick={(() => onAssemble())}
+      <div
+        className="block bg-stone-700 rounded-lg w-1/6 float-right p-2"
       >
-        Assemble
-      </button>
-      <button onClick={(() => onRun())}>Run</button>
+        <div
+          className="rounded-lg text-white p-2"
+        >
+          ASSEMBLER
+          FUNCTIONS
+        </div>
+        <Button
+          variant = "outlined" 
+          onClick={(() => onAssemble())}
+          className="text-white block flex-none h-16 clear-both align-middle p-2"
+        >
+          Assemble</Button>
+        <button onClick={(() => onRun())}>Run</button>
+      </div>
+      
     </div>
   );
 }

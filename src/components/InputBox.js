@@ -6,8 +6,8 @@ export default function InputBox(val, onChange) {
     <TextField
       multiline
       placeholder = "Assembly..."
-      rows = { 25 }
-     
+      rows = { 20 }
+      className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
     />
   );
 }
