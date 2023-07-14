@@ -1,9 +1,8 @@
 import opcodes from "./opcodes";
 //TODO: ADD FLAGS, ADD USER ERROR HANDLING
-//TODO: REMOVE REPETITIVE CODE IN INSTRUCTION HANDLING
 //TODO: WORK IN PROG COUNTER TO EXTERIOR COMPONENTS FOR FREQUENCY
 let cpu = class{
-  constructor(memory, ramOnly = true) {
+  constructor(memory=[], ramOnly = true) {
     this.progMem = memory;
     this.returnMem = memory;
     this.ramOnly = ramOnly;
@@ -23,8 +22,9 @@ let cpu = class{
     this.progMem = program;
     this.reset();
   }
-  getNewMem() { return this.returnMem; }
-  execArithmeticOp(op1, op2, result, operation) {
+  getExecutedMemory() { return this.returnMem; }
+  getRegisterStatus() { return this.registers; }
+  #execArithmeticOp(op1, op2, result, operation) {
     const resultReg = parseInt(result, 16);
     const opReg1 = parseInt(op1, 16);
     const opReg2 = parseInt(op2, 16);
@@ -50,7 +50,7 @@ let cpu = class{
     while (opresult.length < 2) { opresult = "0" + opresult; }
     this.registers[resultReg] = opresult.toUpperCase();
   }
-  handleInstruction(instr, param) {
+  #handleInstruction(instr, param) {
     switch(instr[0]) {
     case opcodes["LDR"]: {
       const reg = parseInt(instr[1], 16);
@@ -92,23 +92,23 @@ let cpu = class{
       break;
     }
     case opcodes["ADD"]: {
-      this.execArithmeticOp(param[0], param[1], instr[1], "+");
+      this.#execArithmeticOp(param[0], param[1], instr[1], "+");
       break;
     }
     case opcodes["SUB"]: {
-      this.execArithmeticOp(param[0], param[1], instr[1], "-");
+      this.#execArithmeticOp(param[0], param[1], instr[1], "-");
       break;
     }
     case opcodes["IOR"]: {
-      this.execArithmeticOp(param[0], param[1], instr[1], "|");
+      this.#execArithmeticOp(param[0], param[1], instr[1], "|");
       break;
     }
     case opcodes["AND"]: {
-      this.execArithmeticOp(param[0], param[1], instr[1], "&");
+      this.#execArithmeticOp(param[0], param[1], instr[1], "&");
       break;
     }
     case opcodes["XOR"]: {
-      this.execArithmeticOp(param[0], param[1], instr[1], "^");
+      this.#execArithmeticOp(param[0], param[1], instr[1], "^");
       break;
     }
     case opcodes["HLT"]:
@@ -118,16 +118,15 @@ let cpu = class{
   step() {
     const instr = this.returnMem[this.iPointer];
     const params = this.returnMem[this.iPointer+1];  
-    this.handleInstruction(instr, params);
+    this.#handleInstruction(instr, params);
     this.iPointer += 2;
   }
   run() {
     for (this.iPointer; this.iPointer < this.progMem.length; this.iPointer+=2) {
       const instr = this.returnMem[this.iPointer];
       const params = this.returnMem[this.iPointer+1];
-      this.handleInstruction(instr, params);
+      this.#handleInstruction(instr, params);
     }
-    this.reset();
   }
 };
 export default cpu;
