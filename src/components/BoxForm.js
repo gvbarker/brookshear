@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Memory from "./Memory";
 import cpu from "../emulator/cpu";
 import assembler from "../emulator/assembler";
@@ -13,7 +13,7 @@ export default function BoxForm() {
   let emulatorCPU = new cpu();
   function mutateMem(func) {
     let nextCells = memory.slice();
-    const newCells = (func === "asm") ? emulatorASM.getAssembledCode() : emulatorCPU.getExecutedMemory();
+    const newCells = (func === "asm") ? emulatorASM.getAssembledCode() : emulatorCPU.getMemory();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
@@ -35,11 +35,14 @@ export default function BoxForm() {
     mutateMem("cpu");
   }
   function onStep() {
+    if (!emulatorCPU.getMemory().length) {
+      console.log("here")
+      emulatorCPU.setProg(memory);
+    }
+    console.log(emulatorCPU.getMemory())
+    console.log(!emulatorCPU.getMemory().length)
     emulatorCPU.step();
     mutateMem("cpu");
-  }
-  const test = (e) => {
-    setCode(e.target.value);
   }
   return (
     <div className="flex bg-slate-600">
