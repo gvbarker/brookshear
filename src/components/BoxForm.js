@@ -1,26 +1,31 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
+import Cell from "./Cell";
 import Memory from "./Memory";
-//import cpu from "../emulator/cpu";
-import assembler from "../emulator/assembler";
-import testASM from "../emulator/testasm";
-import { TextField } from "@mui/material";
-import { Button } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
-export default function BoxForm({asm, cput}) {
+export default function BoxForm({asm, cpu}) {
   const [memory, setMemory] = useState(Array(256).fill("00"));
-  const [registers, setRegisters] = useState(Array(16).fill(0));
+  const [registers, setRegisters] = useState(Array(16).fill("00"));
   const [code, setCode] = useState("");
   function mutateMem(func) {
     let nextCells = memory.slice();
-    const newCells = (func === "asm") ? asm.getAssembledCode() : cput.getMemory();
+    const newCells = (func === "asm") ? asm.getAssembledCode() : cpu.getMemory();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
     setMemory(nextCells);
   }
-  function handleTextChange(event) {
-    setCode(event.target.value);
-  } 
+  function mutateReg() {
+    const nextReg = registers.slice();
+    const newReg = cpu.getRegisterStatus();
+    for (let i = 0; i < nextReg.length; i++) {
+      let reg = newReg[i].toString(16);
+      while (reg.length < 2) { reg = "0" + reg; }
+      reg = reg.toUpperCase();
+      nextReg[i] = reg;
+    }
+    setRegisters(nextReg);
+  }
   function onAssemble() {
     const assembly = code;
     if (!assembly?.trim()) { return; }
@@ -30,17 +35,26 @@ export default function BoxForm({asm, cput}) {
     asm.reset();
   }
   function onRun() {
-    cput.setProg(memory);
-    cput.run();
+    cpu.setProg(memory);
+    cpu.run();
     mutateMem("cpu");
-    cput.reset();
+    mutateReg();
+    cpu.reset();
   }
   function onStep() {
-    if (!cput.getMemory()?.length) {
-      cput.setProg(memory);
+    if (!cpu.getMemory()?.length) {
+      cpu.setProg(memory);
     }
-    cput.step();
+    cpu.step();
     mutateMem("cpu");
+    mutateReg();
+  }
+  function onEmuReset() {
+    setMemory(Array(256).fill("00"));
+    setRegisters(Array(16).fill("00"));
+    asm.reset();
+    cpu.setProg();
+    cpu.reset();
   }
   return (
     <div className="flex bg-slate-600">
@@ -49,12 +63,25 @@ export default function BoxForm({asm, cput}) {
         placeholder = "Assembly..."
         rows = { 20 }
         value={ code }
-        onChange = { handleTextChange }
+        onChange = { e => setCode(e.target.value) }
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
       <Memory 
         data = { memory } 
       />
+      <table>
+        <tbody>
+          {registers.map((reg, regNum) => {
+            return [
+              <tr key = { "r"+regNum }>
+                <td>
+                  <Cell value={reg}/>
+                </td>
+              </tr>
+            ];
+          })}
+        </tbody>
+      </table>
       <div
         className="block bg-stone-700 rounded-lg w-1/6 float-right p-2"
       >
@@ -85,8 +112,26 @@ export default function BoxForm({asm, cput}) {
         >
           Step
         </Button>
+        <Button
+          variant="outlined"
+          onClick={(() => onEmuReset())}
+          className="text-white block flex-none h-16 clear-both align-middle p-2"
+        >
+          Reset
+        </Button>
+        <button
+          onClick={ () => {
+            console.log("ASM");
+            console.log(asm.getAssembledCode());
+            console.log("CPU");
+            console.log(cpu.getMemory());
+            console.log("REG");
+            console.log(registers);
+            console.log("STATE");
+            console.log(memory);
+          }}
+        >Display State</button>
       </div>
-      
     </div>
   );
 }

@@ -19,7 +19,7 @@ let cpu = class{
     this.returnMem = this.progMem;
   }
   setRamOnly(val) { this.ramOnly = val; }
-  setProg(program) { 
+  setProg(program=[]) { 
     this.progMem = program;
     this.reset();
   }
@@ -128,7 +128,6 @@ let cpu = class{
       const params = this.returnMem[this.iPointer+1];
       this.#handleInstruction(instr, params);
     }
-    this.reset();
   }
 };
 export default cpu;
