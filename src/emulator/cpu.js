@@ -19,7 +19,7 @@ let cpu = class{
     this.returnMem = this.progMem;
   }
   setRamOnly(val) { this.ramOnly = val; }
-  setProg(program) { 
+  setProg(program=[]) { 
     this.progMem = program;
     this.reset();
   }

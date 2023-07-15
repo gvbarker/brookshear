@@ -49,6 +49,13 @@ export default function BoxForm({asm, cpu}) {
     mutateMem("cpu");
     mutateReg();
   }
+  function onEmuReset() {
+    setMemory(Array(256).fill("00"));
+    setRegisters(Array(16).fill("00"));
+    asm.reset();
+    cpu.setProg();
+    cpu.reset();
+  }
   return (
     <div className="flex bg-slate-600">
       <TextField
@@ -105,6 +112,25 @@ export default function BoxForm({asm, cpu}) {
         >
           Step
         </Button>
+        <Button
+          variant="outlined"
+          onClick={(() => onEmuReset())}
+          className="text-white block flex-none h-16 clear-both align-middle p-2"
+        >
+          Reset
+        </Button>
+        <button
+          onClick={ () => {
+            console.log("ASM");
+            console.log(asm.getAssembledCode());
+            console.log("CPU");
+            console.log(cpu.getMemory());
+            console.log("REG");
+            console.log(registers);
+            console.log("STATE");
+            console.log(memory);
+          }}
+        >Display State</button>
       </div>
     </div>
   );
