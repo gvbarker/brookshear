@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Memory from "./Memory";
-import InputBox from "./InputBox";
 import cpu from "../emulator/cpu";
 import assembler from "../emulator/assembler";
 import testASM from "../emulator/testasm";
+import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 
 export default function BoxForm() {
@@ -13,14 +13,19 @@ export default function BoxForm() {
   let emulatorCPU = new cpu();
   function mutateMem(func) {
     let nextCells = memory.slice();
-    const newCells = (func === "asm") ? emulatorASM.getAssembledCode() : emulatorCPU.getExecutedMemory();
+    const newCells = (func === "asm") ? emulatorASM.getAssembledCode() : emulatorCPU.getMemory();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
     setMemory(nextCells);
   }
+  function handleTextChange(event) {
+    setCode(event.target.value);
+  } 
   function onAssemble() {
-    emulatorASM.setCodeToAssemble(testASM.cpucode);
+    const assembly = code;
+    if (!assembly?.trim()) { return; }
+    emulatorASM.setCodeToAssemble(assembly);
     emulatorASM.assemble();
     mutateMem("asm");
   }
@@ -30,15 +35,27 @@ export default function BoxForm() {
     mutateMem("cpu");
   }
   function onStep() {
+    if (!emulatorCPU.getMemory().length) {
+      console.log("here")
+      emulatorCPU.setProg(memory);
+    }
+    console.log(emulatorCPU.getMemory())
+    console.log(!emulatorCPU.getMemory().length)
     emulatorCPU.step();
     mutateMem("cpu");
   }
   return (
     <div className="flex bg-slate-600">
-      <InputBox/>
+      <TextField
+        multiline
+        placeholder = "Assembly..."
+        rows = { 20 }
+        value={ code }
+        onChange = { handleTextChange }
+        className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
+      />
       <Memory 
-        data={memory} 
-        onAssemble={(() => onAssemble())}
+        data = { memory } 
       />
       <div
         className="block bg-stone-700 rounded-lg w-1/6 float-right p-2"
@@ -51,7 +68,7 @@ export default function BoxForm() {
         </div>
         <Button
           variant = "outlined" 
-          onClick={(() => onAssemble())}
+          onClick = {(() => onAssemble())}
           className="text-white block flex-none h-16 clear-both align-middle p-2"
         >
           Assemble

@@ -22,7 +22,7 @@ let cpu = class{
     this.progMem = program;
     this.reset();
   }
-  getExecutedMemory() { return this.returnMem; }
+  getMemory() { return this.returnMem; }
   getRegisterStatus() { return this.registers; }
   #execArithmeticOp(op1, op2, result, operation) {
     const resultReg = parseInt(result, 16);
@@ -127,6 +127,7 @@ let cpu = class{
       const params = this.returnMem[this.iPointer+1];
       this.#handleInstruction(instr, params);
     }
+    this.reset();
   }
 };
 export default cpu;
