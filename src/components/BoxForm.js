@@ -18,14 +18,12 @@ export default function BoxForm({asm, cpu}) {
   function mutateReg() {
     const nextReg = registers.slice();
     const newReg = cpu.getRegisterStatus();
-    console.log(newReg)
     for (let i = 0; i < nextReg.length; i++) {
       let reg = newReg[i].toString(16);
       while (reg.length < 2) { reg = "0" + reg; }
       reg = reg.toUpperCase();
       nextReg[i] = reg;
     }
-    console.log(nextReg)
     setRegisters(nextReg);
   }
   function onAssemble() {
