@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import Memory from "./Memory";
-import { TextField, Button } from "@mui/material";
+import { TextField } from "@mui/material";
+import EmuButton from "./EmuButton";
 
 export default function BoxForm({asm, cpu}) {
   const [data, setData] = useState({
@@ -94,34 +95,10 @@ export default function BoxForm({asm, cpu}) {
           ASSEMBLER
           FUNCTIONS
         </div>
-        <Button
-          variant = "outlined" 
-          onClick = {(() => onAssemble())}
-          className="text-white block flex-none h-16 clear-both align-middle p-2"
-        >
-          Assemble
-        </Button>
-        <Button
-          variant = "outlined" 
-          onClick={(() => onRun())}
-          className="text-white block flex-none h-16 clear-both align-middle p-2"
-        >
-          Run
-        </Button>
-        <Button
-          variant = "outlined" 
-          onClick={(() => onStep())}
-          className="text-white block flex-none h-16 clear-both align-middle p-2"
-        >
-          Step
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={(() => onEmuReset())}
-          className="text-white block flex-none h-16 clear-both align-middle p-2"
-        >
-          Reset
-        </Button>
+        <EmuButton value = { "Assemble" } handleClick={ (() => onAssemble()) }/>
+        <EmuButton value = { "Run" } handleClick={ (() => onRun()) }/>
+        <EmuButton value = { "Step" } handleClick={ (() => onStep()) }/>
+        <EmuButton value = { "Reset" } handleClick={ (() => onEmuReset()) }/>
         <button
           onClick={ () => {
             console.log("ASM");
