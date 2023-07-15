@@ -1,13 +1,12 @@
 import React from "react";
 import Cell from "./Cell";
 
-export default function Memory({ data }) {
-
+export default function Memory({ page }) {
   function generate16WidthTable() {
     let newTable = new Array(16);
     for (let i=0; i<16; i++) {
       let offsetIndex = i*16;
-      newTable[i] = data.slice(offsetIndex, offsetIndex+16);
+      newTable[i] = page.slice(offsetIndex, offsetIndex+16);
     }
     return (newTable);
   }
