@@ -11,6 +11,7 @@ let cpu = class{
     this.errorFlag = false;
     this.freqDelay = 0;
   }
+  
   reset() { 
     this.iPointer = 0;
     this.errorFlag = false;
