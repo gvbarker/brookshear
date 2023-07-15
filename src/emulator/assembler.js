@@ -21,7 +21,6 @@ let assembler = class {
 
   assemble() {
     let codeArray = this.unassembledCode.split("\n");
-    console.log(codeArray)
     codeArray = this.#stripCommentsAndEmpties(codeArray);
     codeArray = this.#labelPass(codeArray);
     this.#instructionPass(codeArray);

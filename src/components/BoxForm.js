@@ -25,21 +25,18 @@ export default function BoxForm({asm, cput}) {
     const assembly = code;
     if (!assembly?.trim()) { return; }
     asm.setCodeToAssemble(assembly);
-    
     asm.assemble();
-    console.log(asm.assembledCode)
-    console.log(asm.getAssembledCode())
     mutateMem("asm");
-    console.log(memory)
+    asm.reset();
   }
   function onRun() {
     cput.setProg(memory);
     cput.run();
     mutateMem("cpu");
+    cput.reset();
   }
   function onStep() {
     if (!cput.getMemory()?.length) {
-      console.log("here")
       cput.setProg(memory);
     }
     cput.step();
