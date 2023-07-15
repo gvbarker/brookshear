@@ -1,19 +1,18 @@
 import React, { memo, useState } from "react";
 import Memory from "./Memory";
-import cpu from "../emulator/cpu";
+//import cpu from "../emulator/cpu";
 import assembler from "../emulator/assembler";
 import testASM from "../emulator/testasm";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 
-export default function BoxForm() {
+export default function BoxForm({asm, cput}) {
   const [memory, setMemory] = useState(Array(256).fill("00"));
+  const [registers, setRegisters] = useState(Array(16).fill(0));
   const [code, setCode] = useState("");
-  let emulatorASM = new assembler();
-  let emulatorCPU = new cpu();
   function mutateMem(func) {
     let nextCells = memory.slice();
-    const newCells = (func === "asm") ? emulatorASM.getAssembledCode() : emulatorCPU.getMemory();
+    const newCells = (func === "asm") ? asm.getAssembledCode() : cput.getMemory();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
@@ -25,23 +24,25 @@ export default function BoxForm() {
   function onAssemble() {
     const assembly = code;
     if (!assembly?.trim()) { return; }
-    emulatorASM.setCodeToAssemble(assembly);
-    emulatorASM.assemble();
+    asm.setCodeToAssemble(assembly);
+    
+    asm.assemble();
+    console.log(asm.assembledCode)
+    console.log(asm.getAssembledCode())
     mutateMem("asm");
+    console.log(memory)
   }
   function onRun() {
-    emulatorCPU.setProg(memory);
-    emulatorCPU.run();
+    cput.setProg(memory);
+    cput.run();
     mutateMem("cpu");
   }
   function onStep() {
-    if (!emulatorCPU.getMemory().length) {
+    if (!cput.getMemory()?.length) {
       console.log("here")
-      emulatorCPU.setProg(memory);
+      cput.setProg(memory);
     }
-    console.log(emulatorCPU.getMemory())
-    console.log(!emulatorCPU.getMemory().length)
-    emulatorCPU.step();
+    cput.step();
     mutateMem("cpu");
   }
   return (
