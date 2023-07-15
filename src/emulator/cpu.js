@@ -128,7 +128,6 @@ let cpu = class{
       const params = this.returnMem[this.iPointer+1];
       this.#handleInstruction(instr, params);
     }
-    this.reset();
   }
 };
 export default cpu;
