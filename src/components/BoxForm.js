@@ -78,25 +78,23 @@ export default function BoxForm({ asm, cpu }) {
       />
       <Memory page={data.memory} />
       <Memory page={data.registers} type={"reg"} />
-      <div className="block bg-stone-700 rounded-lg w-1/6 float-right p-2">
-        <div className="rounded-lg text-white p-2">ASSEMBLER FUNCTIONS</div>
-        <EmuButton value={"Assemble"} handleClick={() => onAssemble()} />
-        <EmuButton value={"Run"} handleClick={() => onRun()} />
-        <EmuButton value={"Step"} handleClick={() => onStep()} />
-        <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
-        <button
-          onClick={() => {
-            console.log("ASM");
-            console.log(asm.getAssembledCode());
-            console.log("CPU");
-            console.log(cpu.getMemory());
-            console.log("REG");
-            console.log(data.registers);
-            console.log("STATE");
-            console.log(data.memory);
-          }}>
-          Display State
-        </button>
+      <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center">
+        <h1 className="rounded-lg text-white p-2">EMULATOR FUNCTIONS</h1>
+        <table className="my-0 mx-auto">
+          <tr>
+            <EmuButton value={"Assemble"} handleClick={() => onAssemble()} />
+          </tr>
+          <tr>
+            <EmuButton value={"Run"} handleClick={() => onRun()} />
+          </tr>
+          <tr>
+            <EmuButton value={"Step"} handleClick={() => onStep()} />
+          </tr>
+          <tr>
+            <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
+          </tr>
+        </table>
+        
       </div>
       <CheatSheet/>
       
