@@ -13,17 +13,15 @@ export default function Memory({ page, type }) {
   function regTable() {
     return (
       <table>
-        <tbody>
-          {page.map((reg, regNum) => {
-            return [
-              <tr key={"r" + regNum}>
-                <td>
-                  <Cell value={reg} />
-                </td>
-              </tr>,
-            ];
-          })}
-        </tbody>
+        {page.map((reg, regNum) => {
+          return [
+            <tr key={"r" + regNum}>
+              <td>
+                <Cell value={reg} />
+              </td>
+            </tr>,
+          ];
+        })}
       </table>
     );
   }
@@ -31,23 +29,21 @@ export default function Memory({ page, type }) {
     const table = generate16WidthTable();
     return (
       <table>
-        <tbody>
-          {table.map((rowValue, rowIndex) => {
-            return [
-              <tr key={rowIndex}>
-                {rowValue.map((columnValue, columnIndex) => {
-                  return [
-                    <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
-                      <Cell
-                        key={columnIndex.toString(16) + columnValue}
-                        value={columnValue}></Cell>
-                    </td>,
-                  ];
-                })}
-              </tr>,
-            ];
-          })}
-        </tbody>
+        {table.map((rowValue, rowIndex) => {
+          return [
+            <tr key={rowIndex}>
+              {rowValue.map((columnValue, columnIndex) => {
+                return [
+                  <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
+                    <Cell
+                      key={columnIndex.toString(16) + columnValue}
+                      value={columnValue}></Cell>
+                  </td>,
+                ];
+              })}
+            </tr>,
+          ];
+        })}
       </table>
     );
   }
