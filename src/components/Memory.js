@@ -3,16 +3,16 @@ import Cell from "./Cell";
 
 export default function Memory({ page }) {
   function generate16WidthTable() {
-    let newTable = new Array(16);
-    for (let i=0; i<16; i++) {
-      let offsetIndex = i*16;
-      newTable[i] = page.slice(offsetIndex, offsetIndex+16);
+    const newTable = new Array(16);
+    for (let i = 0; i < 16; i++) {
+      const offsetIndex = i * 16;
+      newTable[i] = page.slice(offsetIndex, offsetIndex + 16);
     }
-    return (newTable);
+    return newTable;
   }
 
-  function celltable() {  
-    let table = generate16WidthTable();
+  function celltable() {
+    const table = generate16WidthTable();
     return (
       <table>
         <tbody>
@@ -21,22 +21,20 @@ export default function Memory({ page }) {
               <tr key={rowIndex}>
                 {rowValue.map((columnValue, columnIndex) => {
                   return [
-                    <td key={ rowIndex.toString(16)+columnIndex.toString(16) }>
-                      <Cell key={ columnIndex.toString(16)+columnValue } value={ columnValue}></Cell>
-                    </td>
+                    <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
+                      <Cell
+                        key={columnIndex.toString(16) + columnValue}
+                        value={columnValue}></Cell>
+                    </td>,
                   ];
                 })}
-              </tr>
+              </tr>,
             ];
           })}
         </tbody>
       </table>
     );
   }
-  
-  return (
-    <div>
-      { celltable() }
-    </div>
-  );
+
+  return <div>{celltable()}</div>;
 }
