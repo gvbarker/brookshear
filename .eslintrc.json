@@ -1,35 +1,39 @@
 {
-    "extends": [
-      "eslint:recommended",
-      "plugin:import/errors",
-      "plugin:react/recommended",
-      "plugin:jsx-a11y/recommended"
-    ],
-    "plugins": ["react", "import", "jsx-a11y"],
-    "settings": {
-        "react": {
-          "version": "detect"
-        }
-    },
-    "rules": {
-        "react/prop-types": 0,
-        "indent": ["error", 2],
-        "linebreak-style":["error","windows"],
-        "quotes": ["error", "double"],
-        "no-unused-vars": 1,
-        "semi": "warn"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2023,
-        "sourceType": "module",
-        "ecmaFeatures": {
-          "jsx": true
-        }
-    },
-    "env": {
-        "es6": true,
-        "browser": true,
-        "node": true,
-        "jest": true
-    } 
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": ["react", "import", "jsx-a11y"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "linebreak-style": ["error", "windows"],
+    "quotes": ["error", "double"],
+    "no-unused-vars": 1,
+    "semi": "warn",
+    "camelcase": "warn",
+    "no-var": "error",
+    "prefer-const": "warn",
+    "yoda": "warn"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2023,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true
   }
+}

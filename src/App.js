@@ -9,10 +9,10 @@ function App() {
   const emuCPU = new cpu();
   return (
     <>
-      <Header/>
-      <BoxForm 
-        asm = { emuASM }
-        cpu = { emuCPU }
+      <Header />
+      <BoxForm
+        asm={emuASM}
+        cpu={emuCPU}
       />
     </>
   );

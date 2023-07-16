@@ -4,34 +4,38 @@ import Memory from "./Memory";
 import { TextField } from "@mui/material";
 import EmuButton from "./EmuButton";
 
-export default function BoxForm({asm, cpu}) {
+export default function BoxForm({ asm, cpu }) {
   const [data, setData] = useState({
     memory: Array(256).fill("00"),
     registers: Array(16).fill("00"),
-    code: ""
+    code: "",
   });
   function mutateMem(func) {
-    let nextCells = data.memory.slice();
-    const newCells = (func === "asm") ? asm.getAssembledCode() : cpu.getMemory();
+    const nextCells = data.memory.slice();
+    const newCells = func === "asm" ? asm.getAssembledCode() : cpu.getMemory();
     for (let i = 0; i < newCells.length; i++) {
       nextCells[i] = newCells[i];
     }
-    setData({...data, memory: nextCells});
+    setData({ ...data, memory: nextCells });
   }
   function mutateReg() {
     const nextReg = data.registers.slice();
     const newReg = cpu.getRegisterStatus();
     for (let i = 0; i < nextReg.length; i++) {
       let reg = newReg[i].toString(16);
-      while (reg.length < 2) { reg = "0" + reg; }
+      while (reg.length < 2) {
+        reg = "0" + reg;
+      }
       reg = reg.toUpperCase();
       nextReg[i] = reg;
     }
-    setData({...data, registers: nextReg});
+    setData({ ...data, registers: nextReg });
   }
   function onAssemble() {
     const assembly = data.code;
-    if (!assembly?.trim()) { return; }
+    if (!assembly?.trim()) {
+      return;
+    }
     asm.setCodeToAssemble(assembly);
     asm.assemble();
     mutateMem("asm");
@@ -53,9 +57,11 @@ export default function BoxForm({asm, cpu}) {
     mutateReg();
   }
   function onEmuReset() {
-    setData({...data, 
+    setData({
+      ...data,
       memory: Array(256).fill("00"),
-      registers: Array(16).fill("00")});
+      registers: Array(16).fill("00"),
+    });
     asm.reset();
     cpu.setProg();
     cpu.reset();
@@ -64,43 +70,46 @@ export default function BoxForm({asm, cpu}) {
     <div className="flex bg-slate-600">
       <TextField
         multiline
-        placeholder = "Assembly..."
-        rows = { 20 }
-        value={ data.code }
-        onChange = { e => setData({...data, code: e.target.value}) }
+        placeholder="Assembly..."
+        rows={20}
+        value={data.code}
+        onChange={(e) => setData({ ...data, code: e.target.value })}
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
-      <Memory 
-        page = { data.memory } 
-      />
+      <Memory page={data.memory} />
       <table>
         <tbody>
           {data.registers.map((reg, regNum) => {
             return [
-              <tr key = { "r"+regNum }>
+              <tr key={"r" + regNum}>
                 <td>
-                  <Cell value={reg}/>
+                  <Cell value={reg} />
                 </td>
-              </tr>
+              </tr>,
             ];
           })}
         </tbody>
       </table>
-      <div
-        className="block bg-stone-700 rounded-lg w-1/6 float-right p-2"
-      >
-        <div
-          className="rounded-lg text-white p-2"
-        >
-          ASSEMBLER
-          FUNCTIONS
-        </div>
-        <EmuButton value = { "Assemble" } handleClick={ (() => onAssemble()) }/>
-        <EmuButton value = { "Run" } handleClick={ (() => onRun()) }/>
-        <EmuButton value = { "Step" } handleClick={ (() => onStep()) }/>
-        <EmuButton value = { "Reset" } handleClick={ (() => onEmuReset()) }/>
+      <div className="block bg-stone-700 rounded-lg w-1/6 float-right p-2">
+        <div className="rounded-lg text-white p-2">ASSEMBLER FUNCTIONS</div>
+        <EmuButton
+          value={"Assemble"}
+          handleClick={() => onAssemble()}
+        />
+        <EmuButton
+          value={"Run"}
+          handleClick={() => onRun()}
+        />
+        <EmuButton
+          value={"Step"}
+          handleClick={() => onStep()}
+        />
+        <EmuButton
+          value={"Reset"}
+          handleClick={() => onEmuReset()}
+        />
         <button
-          onClick={ () => {
+          onClick={() => {
             console.log("ASM");
             console.log(asm.getAssembledCode());
             console.log("CPU");
@@ -109,8 +118,9 @@ export default function BoxForm({asm, cpu}) {
             console.log(data.registers);
             console.log("STATE");
             console.log(data.memory);
-          }}
-        >Display State</button>
+          }}>
+          Display State
+        </button>
       </div>
     </div>
   );
