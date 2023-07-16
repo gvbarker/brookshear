@@ -1,7 +1,7 @@
 import React from "react";
 import Cell from "./Cell";
 
-export default function Memory({ page }) {
+export default function Memory({ page, type }) {
   function generate16WidthTable() {
     const newTable = new Array(16);
     for (let i = 0; i < 16; i++) {
@@ -10,7 +10,23 @@ export default function Memory({ page }) {
     }
     return newTable;
   }
-
+  function regTable() {
+    return (
+      <table>
+        <tbody>
+          {page.map((reg, regNum) => {
+            return [
+              <tr key={"r" + regNum}>
+                <td>
+                  <Cell value={reg} />
+                </td>
+              </tr>,
+            ];
+          })}
+        </tbody>
+      </table>
+    );
+  }
   function celltable() {
     const table = generate16WidthTable();
     return (
@@ -35,6 +51,6 @@ export default function Memory({ page }) {
       </table>
     );
   }
-
-  return <div>{celltable()}</div>;
+  const returnTable = type === "reg" ? regTable() : celltable();
+  return <div>{returnTable}</div>;
 }

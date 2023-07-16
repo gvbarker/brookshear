@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Cell from "./Cell";
 import Memory from "./Memory";
 import { TextField } from "@mui/material";
 import EmuButton from "./EmuButton";
+import CheatSheet from "./CheatSheet";
 
 export default function BoxForm({ asm, cpu }) {
   const [data, setData] = useState({
@@ -77,37 +77,13 @@ export default function BoxForm({ asm, cpu }) {
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
       <Memory page={data.memory} />
-      <table>
-        <tbody>
-          {data.registers.map((reg, regNum) => {
-            return [
-              <tr key={"r" + regNum}>
-                <td>
-                  <Cell value={reg} />
-                </td>
-              </tr>,
-            ];
-          })}
-        </tbody>
-      </table>
+      <Memory page={data.registers} type={"reg"} />
       <div className="block bg-stone-700 rounded-lg w-1/6 float-right p-2">
         <div className="rounded-lg text-white p-2">ASSEMBLER FUNCTIONS</div>
-        <EmuButton
-          value={"Assemble"}
-          handleClick={() => onAssemble()}
-        />
-        <EmuButton
-          value={"Run"}
-          handleClick={() => onRun()}
-        />
-        <EmuButton
-          value={"Step"}
-          handleClick={() => onStep()}
-        />
-        <EmuButton
-          value={"Reset"}
-          handleClick={() => onEmuReset()}
-        />
+        <EmuButton value={"Assemble"} handleClick={() => onAssemble()} />
+        <EmuButton value={"Run"} handleClick={() => onRun()} />
+        <EmuButton value={"Step"} handleClick={() => onStep()} />
+        <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
         <button
           onClick={() => {
             console.log("ASM");
@@ -122,6 +98,8 @@ export default function BoxForm({ asm, cpu }) {
           Display State
         </button>
       </div>
+      <CheatSheet/>
+      
     </div>
   );
 }
