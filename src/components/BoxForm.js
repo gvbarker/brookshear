@@ -77,26 +77,14 @@ export default function BoxForm({ asm, cpu }) {
         onChange={(e) => setData({ ...data, code: e.target.value })}
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
-      <Memory page = {data.memory} />
-      <Memory page = {data.registers} type = {"reg"} />
+      <Memory page={data.memory} />
+      <Memory page={data.registers} type={"reg"} />
       <div className="block bg-stone-700 rounded-lg w-1/6 float-right p-2">
         <div className="rounded-lg text-white p-2">ASSEMBLER FUNCTIONS</div>
-        <EmuButton
-          value={"Assemble"}
-          handleClick={() => onAssemble()}
-        />
-        <EmuButton
-          value={"Run"}
-          handleClick={() => onRun()}
-        />
-        <EmuButton
-          value={"Step"}
-          handleClick={() => onStep()}
-        />
-        <EmuButton
-          value={"Reset"}
-          handleClick={() => onEmuReset()}
-        />
+        <EmuButton value={"Assemble"} handleClick={() => onAssemble()} />
+        <EmuButton value={"Run"} handleClick={() => onRun()} />
+        <EmuButton value={"Step"} handleClick={() => onStep()} />
+        <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
         <button
           onClick={() => {
             console.log("ASM");
@@ -112,19 +100,62 @@ export default function BoxForm({ asm, cpu }) {
         </button>
       </div>
       <div className="bg-stone-700 rounded-md content-center clear-both items-center p-2">
-        <InstrP value = {"LDR &ensp; &nbsp; R,$XY &ensp; Load register R with the contents of memory cell $XY"}/>
-        <InstrP value = {"LDR &ensp; &nbsp; R,#XY &ensp; Load register R with the bit pattern #XY"} />
-        <InstrP value = {"STR &ensp; &nbsp; R,$XY &ensp; Store the contents of register R in memory cell $XY"} />
-        <InstrP value = {"MOV &ensp; R,S &emsp; Move (copy) the contents of register R to register S"} />
-        <InstrP value = {"ADD &ensp; R,S,T &ensp; Add registers S and T as integers, result to register R"} />
-        <InstrP value = {"SUB &ensp; &nbsp; R,S,T &ensp; Subtract register S from T as integers, result to register R"} />
-        <InstrP value = {"IOR &ensp; &nbsp; R,S,T &ensp; Bitwise OR registers S and T, result to register R"} />
-        <InstrP value = {"AND &ensp; R,S,T &ensp; Bitwise AND registers S and T, result to register R"} />
-        <InstrP value = {"XOR &ensp; R,S,T &ensp; Bitwise XOR registers S and T, result to register R"} />
-        <InstrP value = {"ROR &ensp; R,#X &ensp; Rotate bit pattern in register R right X times"} />
-        <InstrP value = {"BEQ &ensp; R,$XY &ensp; If register R equals register 0, change PC to $XY"} />
-        <InstrP value = {"HLT &ensp; (none) &ensp; Halt execution"} />
-        
+        <InstrP
+          value={
+            "LDR &ensp; &nbsp; R,$XY &ensp; Load register R with the contents of memory cell $XY"
+          }
+        />
+        <InstrP
+          value={
+            "LDR &ensp; &nbsp; R,#XY &ensp; Load register R with the bit pattern #XY"
+          }
+        />
+        <InstrP
+          value={
+            "STR &ensp; &nbsp; R,$XY &ensp; Store the contents of register R in memory cell $XY"
+          }
+        />
+        <InstrP
+          value={
+            "MOV &ensp; R,S &emsp; Move (copy) the contents of register R to register S"
+          }
+        />
+        <InstrP
+          value={
+            "ADD &ensp; R,S,T &ensp; Add registers S and T as integers, result to register R"
+          }
+        />
+        <InstrP
+          value={
+            "SUB &ensp; &nbsp; R,S,T &ensp; Subtract register S from T as integers, result to register R"
+          }
+        />
+        <InstrP
+          value={
+            "IOR &ensp; &nbsp; R,S,T &ensp; Bitwise OR registers S and T, result to register R"
+          }
+        />
+        <InstrP
+          value={
+            "AND &ensp; R,S,T &ensp; Bitwise AND registers S and T, result to register R"
+          }
+        />
+        <InstrP
+          value={
+            "XOR &ensp; R,S,T &ensp; Bitwise XOR registers S and T, result to register R"
+          }
+        />
+        <InstrP
+          value={
+            "ROR &ensp; R,#X &ensp; Rotate bit pattern in register R right X times"
+          }
+        />
+        <InstrP
+          value={
+            "BEQ &ensp; R,$XY &ensp; If register R equals register 0, change PC to $XY"
+          }
+        />
+        <InstrP value={"HLT &ensp; (none) &ensp; Halt execution"} />
       </div>
     </div>
   );

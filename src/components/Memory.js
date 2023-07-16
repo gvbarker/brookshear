@@ -51,6 +51,6 @@ export default function Memory({ page, type }) {
       </table>
     );
   }
-  const returnTable = type==="reg" ? regTable() : celltable();
+  const returnTable = type === "reg" ? regTable() : celltable();
   return <div>{returnTable}</div>;
 }
