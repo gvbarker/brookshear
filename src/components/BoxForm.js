@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Cell from "./Cell";
 import Memory from "./Memory";
 import { TextField } from "@mui/material";
 import EmuButton from "./EmuButton";
 import InstrP from "./InstrP";
+import CheatSheet from "./CheatSheet";
 
 export default function BoxForm({ asm, cpu }) {
   const [data, setData] = useState({
@@ -99,64 +99,9 @@ export default function BoxForm({ asm, cpu }) {
           Display State
         </button>
       </div>
-      <div className="bg-stone-700 rounded-md content-center clear-both items-center p-2">
-        <InstrP
-          value={
-            "LDR &ensp; &nbsp; R,$XY &ensp; Load register R with the contents of memory cell $XY"
-          }
-        />
-        <InstrP
-          value={
-            "LDR &ensp; &nbsp; R,#XY &ensp; Load register R with the bit pattern #XY"
-          }
-        />
-        <InstrP
-          value={
-            "STR &ensp; &nbsp; R,$XY &ensp; Store the contents of register R in memory cell $XY"
-          }
-        />
-        <InstrP
-          value={
-            "MOV &ensp; R,S &emsp; Move (copy) the contents of register R to register S"
-          }
-        />
-        <InstrP
-          value={
-            "ADD &ensp; R,S,T &ensp; Add registers S and T as integers, result to register R"
-          }
-        />
-        <InstrP
-          value={
-            "SUB &ensp; &nbsp; R,S,T &ensp; Subtract register S from T as integers, result to register R"
-          }
-        />
-        <InstrP
-          value={
-            "IOR &ensp; &nbsp; R,S,T &ensp; Bitwise OR registers S and T, result to register R"
-          }
-        />
-        <InstrP
-          value={
-            "AND &ensp; R,S,T &ensp; Bitwise AND registers S and T, result to register R"
-          }
-        />
-        <InstrP
-          value={
-            "XOR &ensp; R,S,T &ensp; Bitwise XOR registers S and T, result to register R"
-          }
-        />
-        <InstrP
-          value={
-            "ROR &ensp; R,#X &ensp; Rotate bit pattern in register R right X times"
-          }
-        />
-        <InstrP
-          value={
-            "BEQ &ensp; R,$XY &ensp; If register R equals register 0, change PC to $XY"
-          }
-        />
-        <InstrP value={"HLT &ensp; (none) &ensp; Halt execution"} />
-      </div>
+      <p> fuck</p>
+      <CheatSheet/>
+      
     </div>
   );
 }
