@@ -1,65 +1,102 @@
 import React from "react";
-import InstrP from "./InstrP";
+import CheatSheetText from "./CheatSheetText";
 export default function CheatSheet() {
   return (
-    <div className="bg-stone-700 rounded-md content-center clear-both items-center p-2">
-      
-      <InstrP
-        text={
-          "LDR R,$XY Load register R with the contents of memory cell $XY"
-        }
-      />
-      <InstrP
-        text={
-          "LDR R,#XY Load register R with the bit pattern #XY"
-        }
-      />
-      <InstrP
-        text={
-          "STR &ensp; &nbsp; R,$XY &ensp; Store the contents of register R in memory cell $XY"
-        }
-      />
-      <InstrP
-        text={
-          "MOV &ensp; R,S &emsp; Move (copy) the contents of register R to register S"
-        }
-      />
-      <InstrP
-        text={
-          "ADD &ensp; R,S,T &ensp; Add registers S and T as integers, result to register R"
-        }
-      />
-      <InstrP
-        text={
-          "SUB &ensp; &nbsp; R,S,T &ensp; Subtract register S from T as integers, result to register R"
-        }
-      />
-      <InstrP
-        text={
-          "IOR &ensp; &nbsp; R,S,T &ensp; Bitwise OR registers S and T, result to register R"
-        }
-      />
-      <InstrP
-        text={
-          "AND &ensp; R,S,T &ensp; Bitwise AND registers S and T, result to register R"
-        }
-      />
-      <InstrP
-        text={
-          "XOR &ensp; R,S,T &ensp; Bitwise XOR registers S and T, result to register R"
-        }
-      />
-      <InstrP
-        text={
-          "ROR &ensp; R,#X &ensp; Rotate bit pattern in register R right X times"
-        }
-      />
-      <InstrP
-        text={
-          "BEQ &ensp; R,$XY &ensp; If register R equals register 0, change PC to $XY"
-        }
-      />
-      <InstrP text={"HLT &ensp; (none) &ensp; Halt execution"} />
+    <div className="bg-stone-700">
+      <table>
+        <tbody>
+          <tr>
+            <CheatSheetText text={"INSTR"} />
+            <CheatSheetText text={"OPERANDS"} />
+            <CheatSheetText text={"RESULT"} />
+          </tr>
+          <tr>
+            <CheatSheetText text={"LDR"} />
+            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText
+              text={"Load register R with the contents of memory cell $XY"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"LDR"} />
+            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText text={"Load register R with the bit pattern #XY"} />
+          </tr>
+          <tr>
+            <CheatSheetText text={"STR"} />
+            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText
+              text={"Store the contents of register R in memory cell $XY"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"MOV"} />
+            <CheatSheetText text={"R,S"} />
+            <CheatSheetText
+              text={"Move (copy) the contents of register R to register S"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"ADD"} />
+            <CheatSheetText text={"R,S,T"} />
+            <CheatSheetText
+              text={"Add registers S and T as integers, result to register R"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"SUB"} />
+            <CheatSheetText text={"R,S,T"} />
+            <CheatSheetText
+              text={
+                "Subtract register S from T as integers, result to register R"
+              }
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"IOR"} />
+
+            <CheatSheetText text={"R,S,T"} />
+
+            <CheatSheetText
+              text={"Bitwise OR registers S and T, result to register R"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"AND"} />
+            <CheatSheetText text={"R,S,T"} />
+            <CheatSheetText
+              text={"Bitwise AND registers S and T, result to register R"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"XOR"} />
+            <CheatSheetText text={"R,S,T"} />
+            <CheatSheetText
+              text={"Bitwise XOR registers S and T, result to register R"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"ROR"} />
+            <CheatSheetText text={"R,#X"} />
+            <CheatSheetText
+              text={"Rotate bit pattern in register R right X times"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"BEQ"} />
+            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText
+              text={"If register R equals register 0, change PC to $XY"}
+            />
+          </tr>
+          <tr>
+            <CheatSheetText text={"HLT"} />
+            <CheatSheetText text={"(N/A)"} />
+
+            <CheatSheetText text={"Halt execution"} />
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Memory from "./Memory";
 import { TextField } from "@mui/material";
 import EmuButton from "./EmuButton";
-import InstrP from "./InstrP";
 import CheatSheet from "./CheatSheet";
 
 export default function BoxForm({ asm, cpu }) {
@@ -99,7 +98,6 @@ export default function BoxForm({ asm, cpu }) {
           Display State
         </button>
       </div>
-      <p> fuck</p>
       <CheatSheet/>
       
     </div>
