@@ -6,17 +6,19 @@ import CheatSheet from "./CheatSheet";
 
 export default function BoxForm({ asm, cpu }) {
   const [data, setData] = useState({
-    memory: Array.from({length:256}, () => ({
-      cellVal: "00", 
-      cellColor: "bg-white"})),
-    registers: Array.from({length:16}, () => ({
-      regVal: "00", 
-      regColor: "bg-white"})),
+    memory: Array.from({ length: 256 }, () => ({
+      cellVal: "00",
+      cellColor: "bg-white",
+    })),
+    registers: Array.from({ length: 16 }, () => ({
+      regVal: "00",
+      regColor: "bg-white",
+    })),
     code: "",
   });
   function resetAllColors() {
     const newCells = data.memory.slice();
-    const newRegs = data.registers.slice(); 
+    const newRegs = data.registers.slice();
     for (let i = 0; i < newCells.length; i++) {
       newCells[i].cellColor = "bg-white";
     }
@@ -24,7 +26,7 @@ export default function BoxForm({ asm, cpu }) {
       newRegs[i].regColor = "bg-white";
     }
     cpu.resetColors();
-    setData({...data, registers: newRegs, memory: newCells});
+    setData({ ...data, registers: newRegs, memory: newCells });
   }
   function mutateMem(func) {
     const nextCells = data.memory.slice();
@@ -83,12 +85,14 @@ export default function BoxForm({ asm, cpu }) {
   function onEmuReset() {
     setData({
       ...data,
-      memory: Array.from({length:256}, () => ({
-        cellVal: "00", 
-        cellColor: "bg-white"})),
-      registers: Array.from({length:16}, () => ({
-        regVal: "00", 
-        regColor: "bg-white"}))
+      memory: Array.from({ length: 256 }, () => ({
+        cellVal: "00",
+        cellColor: "bg-white",
+      })),
+      registers: Array.from({ length: 16 }, () => ({
+        regVal: "00",
+        regColor: "bg-white",
+      })),
     });
     asm.reset();
     cpu.setProg();
@@ -121,7 +125,7 @@ export default function BoxForm({ asm, cpu }) {
                 <EmuButton
                   value={"Assemble"}
                   handleClick={() => onAssemble()}
-                />  
+                />
               </td>
             </tr>
             <tr>

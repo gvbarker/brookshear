@@ -6,26 +6,28 @@ const cpu = class {
     this.progMem = memory;
     this.returnMem = memory;
     this.ramOnly = ramOnly;
-    this.registers = Array.from({length:16}, () => ({
-      regVal: "00", 
-      regColor: "bg-white"}));
+    this.registers = Array.from({ length: 16 }, () => ({
+      regVal: "00",
+      regColor: "bg-white",
+    }));
     this.iPointer = 0;
     this.stop = false;
     this.freqDelay = 0;
   }
 
   reset() {
-    this.stop = false
+    this.stop = false;
     this.iPointer = 0;
     this.errorFlag = false;
-    this.registers = Array.from({length:16}, () => ({
-      regVal: "00", 
-      regColor: "bg-white"}));
+    this.registers = Array.from({ length: 16 }, () => ({
+      regVal: "00",
+      regColor: "bg-white",
+    }));
     this.returnMem = this.progMem;
   }
   resetColors() {
     const newCells = this.returnMem.slice();
-    const newRegs = this.registers.slice(); 
+    const newRegs = this.registers.slice();
     for (let i = 0; i < newCells.length; i++) {
       newCells[i].cellColor = "bg-white";
     }
@@ -53,19 +55,24 @@ const cpu = class {
     let opresult;
     switch (operation) {
       case "+":
-        opresult = this.registers[opReg1].regVal + this.registers[opReg2].regVal;
+        opresult =
+          this.registers[opReg1].regVal + this.registers[opReg2].regVal;
         break;
       case "-":
-        opresult = this.registers[opReg2].regVal - this.registers[opReg1].regVal;
+        opresult =
+          this.registers[opReg2].regVal - this.registers[opReg1].regVal;
         break;
       case "|":
-        opresult = this.registers[opReg1].regVal | this.registers[opReg2].regVal;
+        opresult =
+          this.registers[opReg1].regVal | this.registers[opReg2].regVal;
         break;
       case "&":
-        opresult = this.registers[opReg1].regVal & this.registers[opReg2].regVal;
+        opresult =
+          this.registers[opReg1].regVal & this.registers[opReg2].regVal;
         break;
       case "^":
-        opresult = this.registers[opReg1].regVal ^ this.registers[opReg2].regVal;
+        opresult =
+          this.registers[opReg1].regVal ^ this.registers[opReg2].regVal;
         break;
     }
     opresult = opresult.toString(16);
@@ -74,7 +81,7 @@ const cpu = class {
     }
     this.registers[resultReg] = {
       regVal: opresult.toUpperCase(),
-      regColor: "bg-amber-300"
+      regColor: "bg-amber-300",
     };
   }
   #handleInstruction(instr, param) {
@@ -85,7 +92,7 @@ const cpu = class {
         const valAtAddr = parseInt(this.returnMem[addr].cellVal, 16);
         this.registers[reg] = {
           regVal: valAtAddr,
-          regColor: "bg-amber-300"
+          regColor: "bg-amber-300",
         };
         break;
       }
@@ -94,7 +101,7 @@ const cpu = class {
         const immediate = parseInt(param, 16);
         this.registers[reg] = {
           regVal: immediate,
-          regColor: "bg-amber-300"
+          regColor: "bg-amber-300",
         };
         break;
       }
@@ -103,7 +110,7 @@ const cpu = class {
         const addr = parseInt(param, 16);
         this.returnMem[addr] = {
           cellVal: this.registers[reg].regVal,
-          cellColor: "bg-amber-300"
+          cellColor: "bg-amber-300",
         };
         break;
       }
@@ -112,7 +119,7 @@ const cpu = class {
         const reg2 = parseInt(param[1], 16);
         this.registers[reg1] = {
           regVal: this.registers[reg2].regVal,
-          regColor: "bg-amber-300"
+          regColor: "bg-amber-300",
         };
         break;
       }
@@ -122,7 +129,7 @@ const cpu = class {
         const val = this.registers[reg].regVal;
         this.registers[reg] = {
           regVal: (val << numRot) | (val >>> (8 - numRot)),
-          regColor: "bg-amber-300"
+          regColor: "bg-amber-300",
         };
         this.registers[reg].regVal = (val << numRot) | (val >>> (8 - numRot));
         break;
@@ -158,7 +165,7 @@ const cpu = class {
       }
       case opcodes["HLT"]:
         this.returnMem[this.iPointer].cellColor = "bg-red-500";
-        this.returnMem[this.iPointer+1].cellColor = "bg-red-500";
+        this.returnMem[this.iPointer + 1].cellColor = "bg-red-500";
         this.stop = true;
         return;
     }
@@ -167,11 +174,13 @@ const cpu = class {
     const instr = this.returnMem[this.iPointer].cellVal;
     const params = this.returnMem[this.iPointer + 1].cellVal;
     this.returnMem[this.iPointer].cellColor = "bg-green-500";
-    this.returnMem[this.iPointer+1].cellColor = "bg-green-500";
+    this.returnMem[this.iPointer + 1].cellColor = "bg-green-500";
     this.#handleInstruction(instr, params);
   }
   step() {
-    if (this.stop) {return false;}
+    if (this.stop) {
+      return false;
+    }
     this.#runInstruction();
     this.iPointer += 2;
   }

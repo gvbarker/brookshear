@@ -18,9 +18,9 @@ export default function Memory({ page, type }) {
             return [
               <tr key={"r" + regNum}>
                 <td>
-                  <Cell 
-                    value={reg.regVal} 
-                    color={reg.regColor}  
+                  <Cell
+                    value={reg.regVal}
+                    color={reg.regColor}
                   />
                 </td>
               </tr>,

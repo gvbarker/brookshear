@@ -149,11 +149,11 @@ const assembler = class {
     regs = this.#getValidOperands(regs.split(","));
     this.assembledCode.push({
       cellVal: this.OPS[op] + regs[0],
-      cellColor: "bg-green-300"
+      cellColor: "bg-green-300",
     });
     this.assembledCode.push({
       cellVal: regs[1] + regs[2],
-      cellColor: "bg-green-300"
+      cellColor: "bg-green-300",
     });
   }
   #handleTwoOps(op, line) {
@@ -184,21 +184,21 @@ const assembler = class {
         if (hasAddr) {
           this.assembledCode.push({
             cellVal: this.OPS[op] + operands[0],
-            cellColor: "bg-green-300"
+            cellColor: "bg-green-300",
           });
           this.assembledCode.push({
             cellVal: operands[1],
-            cellColor: "bg-green-300"
+            cellColor: "bg-green-300",
           });
           break;
         }
         this.assembledCode.push({
           cellVal: "2" + operands[0],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         this.assembledCode.push({
           cellVal: operands[1],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         break;
       }
@@ -206,43 +206,43 @@ const assembler = class {
       case "STR": {
         this.assembledCode.push({
           cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         this.assembledCode.push({
           cellVal: operands[1],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         break;
       }
       case "MOV":
         this.assembledCode.push({
           cellVal: this.OPS[op] + "0",
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         this.assembledCode.push({
           cellVal: operands[0] + operands[1],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
-        
+
         break;
       case "ROR":
         this.assembledCode.push({
           cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         this.assembledCode.push({
           cellVal: "0" + operands[1],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         break;
       default:
         this.assembledCode.push({
           cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
         this.assembledCode.push({
           cellVal: operands[1] + operands[2],
-          cellColor: "bg-green-300"
+          cellColor: "bg-green-300",
         });
     }
   }
@@ -251,11 +251,11 @@ const assembler = class {
     this.#handleSyntaxErrors(syntaxChecks);
     this.assembledCode.push({
       cellVal: this.OPS[op] + "0",
-      cellColor: "bg-green-300"
+      cellColor: "bg-green-300",
     });
     this.assembledCode.push({
       cellVal: "00",
-      cellColor: "bg-green-300"
+      cellColor: "bg-green-300",
     });
   }
   #getOperation(line) {
