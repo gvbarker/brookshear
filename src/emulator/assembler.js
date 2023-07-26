@@ -147,8 +147,14 @@ const assembler = class {
     this.#handleSyntaxErrors(syntaxChecks);
     let regs = line.slice(line.indexOf("R", 3), line.length);
     regs = this.#getValidOperands(regs.split(","));
-    this.assembledCode.push(this.OPS[op] + regs[0]);
-    this.assembledCode.push(regs[1] + regs[2]);
+    this.assembledCode.push({
+      cellVal: this.OPS[op] + regs[0],
+      cellColor: "red-400"
+    });
+    this.assembledCode.push({
+      cellVal: regs[1] + regs[2],
+      cellColor: "red-400"
+    });
   }
   #handleTwoOps(op, line) {
     const hasImm = line.indexOf("#") > -1;
@@ -176,41 +182,81 @@ const assembler = class {
     switch (op) {
       case "LDR": {
         if (hasAddr) {
-          this.assembledCode.push(this.OPS[op] + operands[0]);
-          this.assembledCode.push(operands[1]);
+          this.assembledCode.push({
+            cellVal: this.OPS[op] + operands[0],
+            cellColor: "red-400"
+          });
+          this.assembledCode.push({
+            cellVal: operands[1],
+            cellColor: "red-400"
+          });
           break;
         }
-        this.assembledCode.push("2" + operands[0]);
-        this.assembledCode.push(operands[1]);
+        this.assembledCode.push({
+          cellVal: "2" + operands[0],
+          cellColor: "red-400"
+        });
+        this.assembledCode.push({
+          cellVal: operands[1],
+          cellColor: "red-400"
+        });
         break;
       }
+      case "BEQ":
       case "STR": {
-        this.assembledCode.push(this.OPS[op] + operands[0]);
-        this.assembledCode.push(operands[1]);
+        this.assembledCode.push({
+          cellVal: this.OPS[op] + operands[0],
+          cellColor: "red-400"
+        });
+        this.assembledCode.push({
+          cellVal: operands[1],
+          cellColor: "red-400"
+        });
         break;
       }
       case "MOV":
-        this.assembledCode.push(this.OPS[op] + "0");
-        this.assembledCode.push(operands[0] + operands[1]);
+        this.assembledCode.push({
+          cellVal: this.OPS[op] + "0",
+          cellColor: "red-400"
+        });
+        this.assembledCode.push({
+          cellVal: operands[0] + operands[1],
+          cellColor: "red-400"
+        });
+        
         break;
       case "ROR":
-        this.assembledCode.push(this.OPS[op] + operands[0]);
-        this.assembledCode.push("0" + operands[1]);
-        break;
-      case "BEQ":
-        this.assembledCode.push(this.OPS[op] + operands[0]);
-        this.assembledCode.push(operands[1]);
+        this.assembledCode.push({
+          cellVal: this.OPS[op] + operands[0],
+          cellColor: "red-400"
+        });
+        this.assembledCode.push({
+          cellVal: "0" + operands[1],
+          cellColor: "red-400"
+        });
         break;
       default:
-        this.assembledCode.push(this.OPS[op] + operands[0]);
-        this.assembledCode.push(operands[1] + operands[2]);
+        this.assembledCode.push({
+          cellVal: this.OPS[op] + operands[0],
+          cellColor: "red-400"
+        });
+        this.assembledCode.push({
+          cellVal: operands[1] + operands[2],
+          cellColor: "red-400"
+        });
     }
   }
   #handleNoOp(op, line) {
     const syntaxChecks = { [`Invalid usage of ${op}`]: line.trim() !== "HLT" };
     this.#handleSyntaxErrors(syntaxChecks);
-    this.assembledCode.push(this.OPS[op] + "0");
-    this.assembledCode.push("00");
+    this.assembledCode.push({
+      cellVal: this.OPS[op] + "0",
+      cellColor: "red-400"
+    });
+    this.assembledCode.push({
+      cellVal: "00",
+      cellColor: "red-400"
+    });
   }
   #getOperation(line) {
     const operationRegex = /([A-Z]{3}|[A-Z][a-z]{2}|[a-z]{3})/;

@@ -127,7 +127,7 @@ const cpu = class {
     }
   }
   #runInstruction() {
-    const instr = this.returnMem[this.iPointer];
+    const instr = this.returnMem.cellVal[this.iPointer];
     const params = this.returnMem[this.iPointer + 1];
     this.#handleInstruction(instr, params);
   }

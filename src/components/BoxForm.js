@@ -6,8 +6,14 @@ import CheatSheet from "./CheatSheet";
 
 export default function BoxForm({ asm, cpu }) {
   const [data, setData] = useState({
-    memory: Array(256).fill("00"),
-    registers: Array(16).fill("00"),
+    memory: Array(256).fill({
+      cellVal: "00", 
+      cellColor: "white"
+    }),
+    registers: Array(16).fill({
+      regVal: "00",
+      regColor: "white"
+    }),
     code: "",
   });
   function mutateMem(func) {
@@ -76,27 +82,44 @@ export default function BoxForm({ asm, cpu }) {
         onChange={(e) => setData({ ...data, code: e.target.value })}
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
-      <Memory page={data.memory} type={"MEMORY"}/>
-      <Memory page={data.registers} type={"REGISTERS"} />
+      <Memory
+        page={data.memory}
+        type={"MEMORY"}
+      />
+      <Memory
+        page={data.registers}
+        type={"REGISTERS"}
+      />
       <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center">
         <h1 className="rounded-lg text-white p-2">EMULATOR FUNCTIONS</h1>
         <table className="my-0 mx-auto">
           <tr>
-            <EmuButton value={"Assemble"} handleClick={() => onAssemble()} />
+            <EmuButton
+              value={"Assemble"}
+              handleClick={() => onAssemble()}
+            />
           </tr>
           <tr>
-            <EmuButton value={"Run"} handleClick={() => onRun()} />
+            <EmuButton
+              value={"Run"}
+              handleClick={() => onRun()}
+            />
           </tr>
           <tr>
-            <EmuButton value={"Step"} handleClick={() => onStep()} />
+            <EmuButton
+              value={"Step"}
+              handleClick={() => onStep()}
+            />
           </tr>
           <tr>
-            <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
+            <EmuButton
+              value={"Reset"}
+              handleClick={() => onEmuReset()}
+            />
           </tr>
         </table>
       </div>
-      <CheatSheet/>
-      
+      <CheatSheet />
     </div>
   );
 }

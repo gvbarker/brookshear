@@ -40,8 +40,8 @@ export default function Memory({ page, type }) {
                   <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
                     <Cell
                       key={columnIndex.toString(16) + columnValue}
-                      value={columnValue}
-                      color={"white"}
+                      value={columnValue.cellVal}
+                      color={columnValue.cellColor}
                     />
                   </td>,
                 ];
