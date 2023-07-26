@@ -76,8 +76,19 @@ export default function BoxForm({ asm, cpu }) {
         onChange={(e) => setData({ ...data, code: e.target.value })}
         className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
       />
-      <Memory page={data.memory} />
-      <Memory page={data.registers} type={"reg"} />
+      <div className="inline-block justify-center px-2">
+        <h1 className="rounded-lg text-white py-2">
+          MEMORY
+        </h1>
+        <Memory page={data.memory} />
+      </div>
+      <div className="inline-block justify-center mx-auto px-2">
+        <h1 className="rounded-lg text-white py-2">
+          REGISTERS
+        </h1>
+        <Memory page={data.registers} type={"reg"} />
+      </div>
+      
       <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center">
         <h1 className="rounded-lg text-white p-2">EMULATOR FUNCTIONS</h1>
         <table className="my-0 mx-auto">
