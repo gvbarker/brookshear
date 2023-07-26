@@ -1,5 +1,5 @@
 import opcodes from "./opcodes";
-//TODO: ADD FLAGS, ADD USER ERROR HANDLING
+//TODO: ADD USER ERROR HANDLING
 //TODO: WORK IN PROG COUNTER TO EXTERIOR COMPONENTS FOR FREQUENCY
 const cpu = class {
   constructor(memory = [], ramOnly = true) {

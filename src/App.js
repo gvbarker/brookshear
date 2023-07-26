@@ -8,13 +8,15 @@ function App() {
   const emuASM = new assembler();
   const emuCPU = new cpu();
   return (
-    <>
-      <Header />
-      <BoxForm
-        asm={emuASM}
-        cpu={emuCPU}
-      />
-    </>
+    <div className="w-full">
+      <Header /> 
+      <div className="bg-zinc-700 h-screen">
+        <BoxForm
+          asm={emuASM}
+          cpu={emuCPU}
+        />
+      </div>
+    </div>
   );
 }
 
