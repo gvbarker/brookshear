@@ -12,41 +12,55 @@ export default function Memory({ page, type }) {
   }
   function regTable() {
     return (
-      <table>
-        {page.map((reg, regNum) => {
-          return [
-            <tr key={"r" + regNum}>
-              <td>
-                <Cell value={reg} />
-              </td>
-            </tr>,
-          ];
-        })}
+      <table className="border">
+        <tbody>
+          {page.map((reg, regNum) => {
+            return [
+              <tr key={"r" + regNum}>
+                <td>
+                  <Cell 
+                    value={reg.regVal} 
+                    color={reg.regColor}  
+                  />
+                </td>
+              </tr>,
+            ];
+          })}
+        </tbody>
       </table>
     );
   }
   function celltable() {
     const table = generate16WidthTable();
     return (
-      <table>
-        {table.map((rowValue, rowIndex) => {
-          return [
-            <tr key={rowIndex}>
-              {rowValue.map((columnValue, columnIndex) => {
-                return [
-                  <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
-                    <Cell
-                      key={columnIndex.toString(16) + columnValue}
-                      value={columnValue}></Cell>
-                  </td>,
-                ];
-              })}
-            </tr>,
-          ];
-        })}
+      <table className="border">
+        <tbody>
+          {table.map((rowValue, rowIndex) => {
+            return [
+              <tr key={rowIndex}>
+                {rowValue.map((columnValue, columnIndex) => {
+                  return [
+                    <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
+                      <Cell
+                        key={columnIndex.toString(16) + columnValue}
+                        value={columnValue.cellVal}
+                        color={columnValue.cellColor}
+                      />
+                    </td>,
+                  ];
+                })}
+              </tr>,
+            ];
+          })}
+        </tbody>
       </table>
     );
   }
-  const returnTable = type === "reg" ? regTable() : celltable();
-  return <div>{returnTable}</div>;
+  const returnTable = type === "REGISTERS" ? regTable() : celltable();
+  return (
+    <div className="inline-block justify-center mx-auto px-2">
+      <h1 className="rounded-lg text-white py-2">{type}</h1>
+      <div>{returnTable}</div>
+    </div>
+  );
 }
