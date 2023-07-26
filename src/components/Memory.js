@@ -13,18 +13,20 @@ export default function Memory({ page, type }) {
   function regTable() {
     return (
       <table className="border">
-        {page.map((reg, regNum) => {
-          return [
-            <tr key={"r" + regNum}>
-              <td>
-                <Cell 
-                  value={reg} 
-                  color={"white"}  
-                />
-              </td>
-            </tr>,
-          ];
-        })}
+        <tbody>
+          {page.map((reg, regNum) => {
+            return [
+              <tr key={"r" + regNum}>
+                <td>
+                  <Cell 
+                    value={reg.regVal} 
+                    color={reg.regColor}  
+                  />
+                </td>
+              </tr>,
+            ];
+          })}
+        </tbody>
       </table>
     );
   }
@@ -32,23 +34,25 @@ export default function Memory({ page, type }) {
     const table = generate16WidthTable();
     return (
       <table className="border">
-        {table.map((rowValue, rowIndex) => {
-          return [
-            <tr key={rowIndex}>
-              {rowValue.map((columnValue, columnIndex) => {
-                return [
-                  <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
-                    <Cell
-                      key={columnIndex.toString(16) + columnValue}
-                      value={columnValue.cellVal}
-                      color={columnValue.cellColor}
-                    />
-                  </td>,
-                ];
-              })}
-            </tr>,
-          ];
-        })}
+        <tbody>
+          {table.map((rowValue, rowIndex) => {
+            return [
+              <tr key={rowIndex}>
+                {rowValue.map((columnValue, columnIndex) => {
+                  return [
+                    <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
+                      <Cell
+                        key={columnIndex.toString(16) + columnValue}
+                        value={columnValue.cellVal}
+                        color={columnValue.cellColor}
+                      />
+                    </td>,
+                  ];
+                })}
+              </tr>,
+            ];
+          })}
+        </tbody>
       </table>
     );
   }
