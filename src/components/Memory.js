@@ -12,12 +12,15 @@ export default function Memory({ page, type }) {
   }
   function regTable() {
     return (
-      <table>
+      <table className="border">
         {page.map((reg, regNum) => {
           return [
             <tr key={"r" + regNum}>
               <td>
-                <Cell value={reg} />
+                <Cell 
+                  value={reg} 
+                  color={"white"}  
+                />
               </td>
             </tr>,
           ];
@@ -28,7 +31,7 @@ export default function Memory({ page, type }) {
   function celltable() {
     const table = generate16WidthTable();
     return (
-      <table>
+      <table className="border">
         {table.map((rowValue, rowIndex) => {
           return [
             <tr key={rowIndex}>
@@ -37,8 +40,8 @@ export default function Memory({ page, type }) {
                   <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
                     <Cell
                       key={columnIndex.toString(16) + columnValue}
-                      value={columnValue} 
-                      className="bg-red-600"
+                      value={columnValue}
+                      color={"white"}
                     />
                   </td>,
                 ];
@@ -52,12 +55,8 @@ export default function Memory({ page, type }) {
   const returnTable = type === "REGISTERS" ? regTable() : celltable();
   return (
     <div className="inline-block justify-center mx-auto px-2">
-      <h1 className="rounded-lg text-white py-2">
-        {type}
-      </h1>
-      <div>
-        {returnTable}
-      </div>
+      <h1 className="rounded-lg text-white py-2">{type}</h1>
+      <div>{returnTable}</div>
     </div>
   );
 }
