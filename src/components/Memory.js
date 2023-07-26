@@ -17,7 +17,7 @@ export default function Memory({ page, type }) {
           {page.map((reg, regNum) => {
             return [
               <tr key={"r" + regNum}>
-                <td>
+                <td className="p-0.5">
                   <Cell
                     value={reg.regVal}
                     color={reg.regColor}
@@ -40,7 +40,9 @@ export default function Memory({ page, type }) {
               <tr key={rowIndex}>
                 {rowValue.map((columnValue, columnIndex) => {
                   return [
-                    <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
+                    <td
+                      className="p-0.5"
+                      key={rowIndex.toString(16) + columnIndex.toString(16)}>
                       <Cell
                         key={columnIndex.toString(16) + columnValue}
                         value={columnValue.cellVal}
@@ -58,8 +60,8 @@ export default function Memory({ page, type }) {
   }
   const returnTable = type === "REGISTERS" ? regTable() : celltable();
   return (
-    <div className="inline-block justify-center mx-auto px-2">
-      <h1 className="rounded-lg text-white py-2">{type}</h1>
+    <div className="bg-stone-600 rounded-md inline-block justify-center mx-auto px-2 border-slate-700 border">
+      <h1 className="rounded-lg text-white p-1">{type}</h1>
       <div>{returnTable}</div>
     </div>
   );

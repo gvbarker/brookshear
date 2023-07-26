@@ -99,15 +99,18 @@ export default function BoxForm({ asm, cpu }) {
     cpu.reset();
   }
   return (
-    <div className="flex bg-slate-600">
-      <TextField
-        multiline
-        placeholder="Assembly..."
-        rows={20}
-        value={data.code}
-        onChange={(e) => setData({ ...data, code: e.target.value })}
-        className="flex bg-white w-1/3 rounded-lg p-3 overflow-auto"
-      />
+    <div className="flex bg-slate-600 px-1">
+      <div className="bg-stone-600 inline-block w-1/3 px-2 border-slate-700 border overflow-auto">
+        <h1 className="rounded-lg text-white p-1">ASSEMBLY</h1>
+        <TextField
+          multiline
+          placeholder="Assembly..."
+          rows={21}
+          value={data.code}
+          onChange={(e) => setData({ ...data, code: e.target.value })}
+          className="flex bg-white rounded-md  overflow-auto"
+        />
+      </div>
       <Memory
         page={data.memory}
         type={"MEMORY"}
@@ -116,7 +119,7 @@ export default function BoxForm({ asm, cpu }) {
         page={data.registers}
         type={"REGISTERS"}
       />
-      <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center">
+      <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center border-slate-700 border">
         <h1 className="rounded-lg text-white p-2">EMULATOR FUNCTIONS</h1>
         <table className="my-0 mx-auto">
           <tbody>

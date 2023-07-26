@@ -2,7 +2,7 @@ import React from "react";
 import CheatSheetText from "./CheatSheetText";
 export default function CheatSheet() {
   return (
-    <div className="bg-stone-700 ">
+    <div className="bg-stone-700 border-slate-700 border rounded-md">
       <h1 className="rounded-lg text-white py-2 px-1">ASSEMBLY CHEATSHEET</h1>
       <table>
         <tbody>
