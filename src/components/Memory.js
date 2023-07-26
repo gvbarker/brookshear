@@ -47,6 +47,15 @@ export default function Memory({ page, type }) {
       </table>
     );
   }
-  const returnTable = type === "reg" ? regTable() : celltable();
-  return <div>{returnTable}</div>;
+  const returnTable = type === "REGISTERS" ? regTable() : celltable();
+  return (
+    <div className="inline-block justify-center mx-auto px-2">
+      <h1 className="rounded-lg text-white py-2">
+        {type}
+      </h1>
+      <div>
+        {returnTable}
+      </div>
+    </div>
+  );
 }
