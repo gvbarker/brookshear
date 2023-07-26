@@ -37,7 +37,9 @@ export default function Memory({ page, type }) {
                   <td key={rowIndex.toString(16) + columnIndex.toString(16)}>
                     <Cell
                       key={columnIndex.toString(16) + columnValue}
-                      value={columnValue}></Cell>
+                      value={columnValue} 
+                      className="bg-red-600"
+                    />
                   </td>,
                 ];
               })}

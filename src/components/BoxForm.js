@@ -78,8 +78,6 @@ export default function BoxForm({ asm, cpu }) {
       />
       <Memory page={data.memory} type={"MEMORY"}/>
       <Memory page={data.registers} type={"REGISTERS"} />
-
-      
       <div className="bg-stone-700 rounded-lg w-1/6 p-2 text-center">
         <h1 className="rounded-lg text-white p-2">EMULATOR FUNCTIONS</h1>
         <table className="my-0 mx-auto">
@@ -96,7 +94,6 @@ export default function BoxForm({ asm, cpu }) {
             <EmuButton value={"Reset"} handleClick={() => onEmuReset()} />
           </tr>
         </table>
-        
       </div>
       <CheatSheet/>
       

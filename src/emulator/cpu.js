@@ -126,10 +126,13 @@ const cpu = class {
         return;
     }
   }
-  step() {
+  #runInstruction() {
     const instr = this.returnMem[this.iPointer];
     const params = this.returnMem[this.iPointer + 1];
     this.#handleInstruction(instr, params);
+  }
+  step() {
+    this.#runInstruction();
     this.iPointer += 2;
   }
   run() {
@@ -138,9 +141,7 @@ const cpu = class {
       this.iPointer < this.progMem.length;
       this.iPointer += 2
     ) {
-      const instr = this.returnMem[this.iPointer];
-      const params = this.returnMem[this.iPointer + 1];
-      this.#handleInstruction(instr, params);
+      this.#runInstruction();
     }
   }
 };
