@@ -70,19 +70,17 @@ const assembler = class {
     };
     this.#handleSyntaxErrors(syntaxChecks);
     label = label[0];
-    location = location.toString();
+    location = location.toString(16).toUpperCase();
     while (location.length < 2) {
       location = "0" + location;
     }
     this.labels[label] = location;
-    console.log(this.labels)
   }
 
   #getValidOperands(operands) {
     const validOperands = [];
     for (const operand of operands) {
       if (operand[0] === "R") {
-        console.log("valid operand: " + operand)
         validOperands.push(this.#getValidRegister(operand));
         continue;
       }
@@ -99,17 +97,16 @@ const assembler = class {
     return reg.slice(1);
   }
   #getValidNumeric(num) {
-    console.log(num)
     num = num.trim();
     try {
+      if (num in this.labels) {
+        return this.labels[num];
+      }
       if (!num || num.length > 3)
         throw new Error(`Accessed invalid value "${num}"`);
       return num.slice(1, 3);
     } catch (err) {
-      if (num in this.labels) {
-        console.log(num)
-        return this.labels[num];
-      }
+      
       this.#handleErrors(err);
       return;
     }

@@ -22,7 +22,7 @@ const cpu = class {
     this.iPointer = 0;
     this.errorFlag = false;
     this.registers = Array.from({ length: 16 }, () => ({
-      regVal: "00",
+      regVal: 0,
       regColor: "bg-white",
     }));
     this.returnMem = this.progMem;
@@ -67,7 +67,7 @@ const cpu = class {
       case "+":
         opresult = operand1 + operand2;
         if (opresult > 0xFF) {
-          opresult -= 0x100;
+          opresult %= 0x100;
         }
         break;
       case "-":
@@ -198,7 +198,6 @@ const cpu = class {
       this.stop = true;
       return;
     }
-    console.log(this.iPointer, this.returnMem[this.iPointer])
     const instr = this.returnMem[this.iPointer].cellVal;
     const params = this.returnMem[this.iPointer + 1].cellVal;
     this.returnMem[this.iPointer].cellColor = "bg-green-500";
