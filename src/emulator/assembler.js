@@ -179,72 +179,25 @@ const assembler = class {
     this.#handleSyntaxErrors(syntaxChecks);
     let operands = line.slice(line.indexOf("R", 3), line.length);
     operands = this.#getValidOperands(operands.split(","));
-    switch (op) {
-      case "LDR": {
-        if (hasAddr) {
-          this.assembledCode.push({
-            cellVal: this.OPS[op] + operands[0],
-            cellColor: "bg-green-300",
-          });
-          this.assembledCode.push({
-            cellVal: operands[1],
-            cellColor: "bg-green-300",
-          });
-          break;
-        }
-        this.assembledCode.push({
-          cellVal: "2" + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      }
-      case "BEQ":
-      case "STR": {
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      }
-      case "MOV":
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + "0",
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[0] + operands[1],
-          cellColor: "bg-green-300",
-        });
-
-        break;
-      case "ROR":
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: "0" + operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      default:
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1] + operands[2],
-          cellColor: "bg-green-300",
-        });
+    if (op === "ROR") {
+      this.assembledCode.push({
+        cellVal: this.OPS[op] + operands[0],
+        cellColor: "bg-green-300",
+      });
+      this.assembledCode.push({
+        cellVal: "0" + operands[1],
+        cellColor: "bg-green-300",
+      });
+      return;
     }
+    this.assembledCode.push({
+      cellVal: this.OPS[op] + operands[0],
+      cellColor: "bg-green-300",
+    });
+    this.assembledCode.push({
+      cellVal: operands[1],
+      cellColor: "bg-green-300",
+    });
   }
   #handleNoOp(op, line) {
     const syntaxChecks = { [`Invalid usage of ${op}`]: line.trim() !== "HLT" };
