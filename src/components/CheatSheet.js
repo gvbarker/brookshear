@@ -1,5 +1,6 @@
 import React from "react";
 import CheatSheetText from "./CheatSheetText";
+//TODO: REFACTOR TO GENERATE PROGRAMMATICALLY 
 export default function CheatSheet() {
   return (
     <div className="bg-stone-700 border-slate-700 border rounded-md">
@@ -19,8 +20,8 @@ export default function CheatSheet() {
             />
           </tr>
           <tr>
-            <CheatSheetText text={"LDR"} />
-            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText text={"MOV"} />
+            <CheatSheetText text={"R,#XY"} />
             <CheatSheetText text={"Load register R with the bit pattern #XY"} />
           </tr>
           <tr>
@@ -31,10 +32,10 @@ export default function CheatSheet() {
             />
           </tr>
           <tr>
-            <CheatSheetText text={"MOV"} />
+            <CheatSheetText text={"CPY"} />
             <CheatSheetText text={"R,S"} />
             <CheatSheetText
-              text={"Move (copy) the contents of register R to register S"}
+              text={"Copy the contents of register R to register S"}
             />
           </tr>
           <tr>

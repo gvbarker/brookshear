@@ -70,7 +70,7 @@ const assembler = class {
     };
     this.#handleSyntaxErrors(syntaxChecks);
     label = label[0];
-    location = location.toString();
+    location = location.toString(16).toUpperCase();
     while (location.length < 2) {
       location = "0" + location;
     }
@@ -99,13 +99,14 @@ const assembler = class {
   #getValidNumeric(num) {
     num = num.trim();
     try {
+      if (num in this.labels) {
+        return this.labels[num];
+      }
       if (!num || num.length > 3)
         throw new Error(`Accessed invalid value "${num}"`);
       return num.slice(1, 3);
     } catch (err) {
-      if (num in this.labels) {
-        return this.labels[num];
-      }
+      
       this.#handleErrors(err);
       return;
     }
@@ -116,7 +117,7 @@ const assembler = class {
       ["You have exceeded the number of allowed commands for all-RAM assembly."]:
         this.ramOnly && this.assembledCode.length > 256,
       ["You have exceeded the number of allowed commands for auxiliary-included assembly."]:
-        !this.ramOnly && this.assembledCode.length > null,
+        !this.ramOnly && this.assembledCode.length > 35,
     };
     this.#handleSyntaxErrors(syntaxChecks);
     for (const line of codeArray) {
@@ -157,6 +158,7 @@ const assembler = class {
     });
   }
   #handleTwoOps(op, line) {
+    
     const hasImm = line.indexOf("#") > -1;
     const hasAddr = line.indexOf("$") > -1;
     const registerRegex = /(r([0-9]|[a-f]|[A-F]))/gi;
@@ -176,76 +178,42 @@ const assembler = class {
       [`Invalid number of registers for operation "${op}"`]:
         this.OPS.addrs.includes(op) && registerCount > 1,
     };
+    
     this.#handleSyntaxErrors(syntaxChecks);
     let operands = line.slice(line.indexOf("R", 3), line.length);
     operands = this.#getValidOperands(operands.split(","));
-    switch (op) {
-      case "LDR": {
-        if (hasAddr) {
-          this.assembledCode.push({
-            cellVal: this.OPS[op] + operands[0],
-            cellColor: "bg-green-300",
-          });
-          this.assembledCode.push({
-            cellVal: operands[1],
-            cellColor: "bg-green-300",
-          });
-          break;
-        }
-        this.assembledCode.push({
-          cellVal: "2" + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      }
-      case "BEQ":
-      case "STR": {
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      }
-      case "MOV":
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + "0",
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[0] + operands[1],
-          cellColor: "bg-green-300",
-        });
-
-        break;
-      case "ROR":
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: "0" + operands[1],
-          cellColor: "bg-green-300",
-        });
-        break;
-      default:
-        this.assembledCode.push({
-          cellVal: this.OPS[op] + operands[0],
-          cellColor: "bg-green-300",
-        });
-        this.assembledCode.push({
-          cellVal: operands[1] + operands[2],
-          cellColor: "bg-green-300",
-        });
+    if (op === "ROR") {
+      this.assembledCode.push({
+        cellVal: this.OPS[op] + operands[0],
+        cellColor: "bg-green-300",
+      });
+      this.assembledCode.push({
+        cellVal: "0" + operands[1],
+        cellColor: "bg-green-300",
+      });
+      return;
     }
+    if (op === "CPY") {
+      this.assembledCode.push({
+        cellVal: this.OPS[op] + "0",
+        cellColor: "bg-green-300",
+      });
+      this.assembledCode.push({
+        cellVal: operands[0] + operands[1],
+        cellColor: "bg-green-300",
+      });
+      return;
+    }
+    this.assembledCode.push({
+      cellVal: this.OPS[op] + operands[0],
+      cellColor: "bg-green-300",
+    });
+    this.assembledCode.push({
+      cellVal: operands[1],
+      cellColor: "bg-green-300",
+    });
   }
+
   #handleNoOp(op, line) {
     const syntaxChecks = { [`Invalid usage of ${op}`]: line.trim() !== "HLT" };
     this.#handleSyntaxErrors(syntaxChecks);
@@ -263,7 +231,7 @@ const assembler = class {
     const operation = operationRegex.exec(line);
     const syntaxChecks = {
       [`No operation found in line ${line}`]: !operation,
-      [`Invalid operation in line ${line}`]: !(operation[0] in this.OPS),
+      [`Invalid operation in line ${line}`]: !(operation && operation[0] in this.OPS),
     };
     this.#handleSyntaxErrors(syntaxChecks);
     return operation[0];
