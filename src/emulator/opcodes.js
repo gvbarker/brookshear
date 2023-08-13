@@ -1,3 +1,4 @@
+//TODO: REFACTOR TO INCLUDE OPCODE SYNTAX AND DESCRIPTION IN OPCODE OBJECT
 /*
 Current Syntax
 LDR R, $XY  : Load with bit pattern in cell xy

@@ -104,11 +104,13 @@ export default function BoxForm({ asm, cpu }) {
         <h1 className="rounded-lg text-white p-1">ASSEMBLY</h1>
         <TextField
           multiline
+          variant="filled"
           placeholder="Assembly..."
           rows={21}
           value={data.code}
           onChange={(e) => setData({ ...data, code: e.target.value })}
           className="flex bg-white rounded-md  overflow-auto"
+          InputProps={{ disableUnderline: true }}
         />
       </div>
       <Memory

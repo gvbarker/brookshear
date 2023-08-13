@@ -1,5 +1,6 @@
 import React from "react";
 import CheatSheetText from "./CheatSheetText";
+//TODO: REFACTOR TO GENERATE PROGRAMMATICALLY 
 export default function CheatSheet() {
   return (
     <div className="bg-stone-700 border-slate-700 border rounded-md">

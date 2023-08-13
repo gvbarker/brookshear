@@ -75,12 +75,14 @@ const assembler = class {
       location = "0" + location;
     }
     this.labels[label] = location;
+    console.log(this.labels)
   }
 
   #getValidOperands(operands) {
     const validOperands = [];
     for (const operand of operands) {
       if (operand[0] === "R") {
+        console.log("valid operand: " + operand)
         validOperands.push(this.#getValidRegister(operand));
         continue;
       }
@@ -97,6 +99,7 @@ const assembler = class {
     return reg.slice(1);
   }
   #getValidNumeric(num) {
+    console.log(num)
     num = num.trim();
     try {
       if (!num || num.length > 3)
@@ -104,6 +107,7 @@ const assembler = class {
       return num.slice(1, 3);
     } catch (err) {
       if (num in this.labels) {
+        console.log(num)
         return this.labels[num];
       }
       this.#handleErrors(err);
@@ -116,7 +120,7 @@ const assembler = class {
       ["You have exceeded the number of allowed commands for all-RAM assembly."]:
         this.ramOnly && this.assembledCode.length > 256,
       ["You have exceeded the number of allowed commands for auxiliary-included assembly."]:
-        !this.ramOnly && this.assembledCode.length > null,
+        !this.ramOnly && this.assembledCode.length > 35,
     };
     this.#handleSyntaxErrors(syntaxChecks);
     for (const line of codeArray) {
@@ -157,6 +161,7 @@ const assembler = class {
     });
   }
   #handleTwoOps(op, line) {
+    
     const hasImm = line.indexOf("#") > -1;
     const hasAddr = line.indexOf("$") > -1;
     const registerRegex = /(r([0-9]|[a-f]|[A-F]))/gi;
@@ -191,6 +196,17 @@ const assembler = class {
       });
       return;
     }
+    if (op === "CPY") {
+      this.assembledCode.push({
+        cellVal: this.OPS[op] + "0",
+        cellColor: "bg-green-300",
+      });
+      this.assembledCode.push({
+        cellVal: operands[0] + operands[1],
+        cellColor: "bg-green-300",
+      });
+      return;
+    }
     this.assembledCode.push({
       cellVal: this.OPS[op] + operands[0],
       cellColor: "bg-green-300",
@@ -218,7 +234,7 @@ const assembler = class {
     const operation = operationRegex.exec(line);
     const syntaxChecks = {
       [`No operation found in line ${line}`]: !operation,
-      [`Invalid operation in line ${line}`]: !(operation[0] in this.OPS),
+      [`Invalid operation in line ${line}`]: !(operation && operation[0] in this.OPS),
     };
     this.#handleSyntaxErrors(syntaxChecks);
     return operation[0];
