@@ -129,8 +129,8 @@ const cpu = class {
       case opcodes["CPY"]: {
         const reg1 = parseInt(param[0], 16);
         const reg2 = parseInt(param[1], 16);
-        this.registers[reg1] = {
-          regVal: this.registers[reg2].regVal,
+        this.registers[reg2] = {
+          regVal: this.registers[reg1].regVal,
           regColor: "bg-amber-300",
         };
         break;
