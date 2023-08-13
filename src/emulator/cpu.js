@@ -56,27 +56,25 @@ const cpu = class {
     const resultReg = parseInt(result, 16);
     const opReg1 = parseInt(op1, 16);
     const opReg2 = parseInt(op2, 16);
+    const operand1 = parseInt(this.registers[opReg1].regVal);
+    const operand2 = parseInt(this.registers[opReg2].regVal);
+
     let opresult;
     switch (operation) {
       case "+":
-        opresult =
-          this.registers[opReg1].regVal + this.registers[opReg2].regVal;
+        opresult = operand1 + operand2;
         break;
       case "-":
-        opresult =
-          this.registers[opReg2].regVal - this.registers[opReg1].regVal;
+        opresult = operand2 - operand1;
         break;
       case "|":
-        opresult =
-          this.registers[opReg1].regVal | this.registers[opReg2].regVal;
+        opresult = operand1 | operand2;
         break;
       case "&":
-        opresult =
-          this.registers[opReg1].regVal & this.registers[opReg2].regVal;
+        opresult = operand1 & operand2;
         break;
       case "^":
-        opresult =
-          this.registers[opReg1].regVal ^ this.registers[opReg2].regVal;
+        opresult = operand1 ^ operand2;
         break;
     }
     opresult = opresult.toString(16);

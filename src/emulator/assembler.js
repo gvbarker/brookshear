@@ -176,6 +176,7 @@ const assembler = class {
       [`Invalid number of registers for operation "${op}"`]:
         this.OPS.addrs.includes(op) && registerCount > 1,
     };
+    
     this.#handleSyntaxErrors(syntaxChecks);
     let operands = line.slice(line.indexOf("R", 3), line.length);
     operands = this.#getValidOperands(operands.split(","));
@@ -199,6 +200,7 @@ const assembler = class {
       cellColor: "bg-green-300",
     });
   }
+
   #handleNoOp(op, line) {
     const syntaxChecks = { [`Invalid usage of ${op}`]: line.trim() !== "HLT" };
     this.#handleSyntaxErrors(syntaxChecks);
