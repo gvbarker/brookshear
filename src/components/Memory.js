@@ -1,5 +1,5 @@
 import React from "react";
-import Cell from "./Cell";
+import Cell from "./cell";
 
 export default function Memory({ page, type }) {
   function generate16WidthTable() {
