@@ -42,7 +42,27 @@ HLT`,
 mov r0, #80
 mov r1, #fc
 and r2,r1,r0
-str r2, $ff`
+str r2, $ff`,
+  fib: `
+mov r0, #05
+mov r1, #01
+mov r2, #01
+str r1, $80
+str r2, $81
+mov r3, #00
+mov r5, #82
+mov r6, #01
+beq r4, end
+add r3,r2,r1
+cpy r2, r1
+cpy r3, r2
+str r5, $1B
+str r3, $82
+add r5, r5, r6
+add r4, r4, r6
+beq r0, $10
+end:
+hlt`
 };
 
 
