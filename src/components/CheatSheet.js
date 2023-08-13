@@ -19,8 +19,8 @@ export default function CheatSheet() {
             />
           </tr>
           <tr>
-            <CheatSheetText text={"LDR"} />
-            <CheatSheetText text={"R,$XY"} />
+            <CheatSheetText text={"MOV"} />
+            <CheatSheetText text={"R,#XY"} />
             <CheatSheetText text={"Load register R with the bit pattern #XY"} />
           </tr>
           <tr>
@@ -31,10 +31,10 @@ export default function CheatSheet() {
             />
           </tr>
           <tr>
-            <CheatSheetText text={"MOV"} />
+            <CheatSheetText text={"CPY"} />
             <CheatSheetText text={"R,S"} />
             <CheatSheetText
-              text={"Move (copy) the contents of register R to register S"}
+              text={"Copy the contents of register R to register S"}
             />
           </tr>
           <tr>

@@ -1,4 +1,5 @@
 /*
+Current Syntax
 LDR R, $XY  : Load with bit pattern in cell xy
 MOV R, #XY  : Load with bit pattern xy
 STR R, $XY  : Store r bit pattern in cell xy

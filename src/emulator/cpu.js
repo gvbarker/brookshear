@@ -1,6 +1,10 @@
 import opcodes from "./opcodes";
 //TODO: ADD USER ERROR HANDLING
 //TODO: WORK IN PROG COUNTER TO EXTERIOR COMPONENTS FOR FREQUENCY
+//TODO: FLAGS(?)
+//TODO: ADD HANDLING FOR R+S > FF
+//TODO: ADD HANDLING FOR R-S < 0
+//TODO: ADD CHECK FOR BEQ TO ENSURE JUMP IS MADE TO EVEN NUMBERED DATA CELL
 const cpu = class {
   constructor(memory = [], ramOnly = true) {
     this.progMem = memory;
@@ -96,7 +100,7 @@ const cpu = class {
         };
         break;
       }
-      case "2": {
+      case opcodes["MOV"]: {
         const reg = parseInt(instr[1], 16);
         const immediate = parseInt(param, 16);
         this.registers[reg] = {
@@ -114,7 +118,7 @@ const cpu = class {
         };
         break;
       }
-      case opcodes["MOV"]: {
+      case opcodes["CPY"]: {
         const reg1 = parseInt(param[0], 16);
         const reg2 = parseInt(param[1], 16);
         this.registers[reg1] = {
