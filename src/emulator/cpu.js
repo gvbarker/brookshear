@@ -66,7 +66,7 @@ const cpu = class {
     switch (operation) {
       case "+":
         opresult = operand1 + operand2;
-        if (opresult > 0xFF) {
+        if (opresult > 0xff) {
           opresult %= 0x100;
         }
         break;
@@ -119,7 +119,7 @@ const cpu = class {
         const reg = parseInt(instr[1], 16);
         const addr = parseInt(param, 16);
         const val = this.#pad(this.registers[reg].regVal.toString(16));
-         
+
         this.returnMem[addr] = {
           cellVal: val.toUpperCase(),
           cellColor: "bg-amber-300",
@@ -150,17 +150,17 @@ const cpu = class {
         const reg = parseInt(instr[1], 16);
         this.registers[reg] = {
           regVal: this.registers[reg].regVal,
-          regColor: "bg-amber-300"
+          regColor: "bg-amber-300",
         };
         this.registers[0] = {
           regVal: this.registers[0].regVal,
-          regColor: "bg-amber-300"
-        }
-        
+          regColor: "bg-amber-300",
+        };
+
         if (this.registers[reg].regVal === this.registers[0].regVal) {
           const addr = parseInt(param, 16);
           //subtracting 2 to counterbalance the incrementing I-pointer after instruction completes
-          this.iPointer = addr-2;
+          this.iPointer = addr - 2;
         }
         break;
       }
@@ -192,7 +192,7 @@ const cpu = class {
     }
   }
   #runInstruction() {
-    if (this.iPointer >= 0xFE) {
+    if (this.iPointer >= 0xfe) {
       this.returnMem[this.iPointer].cellColor = "bg-red-500";
       this.returnMem[this.iPointer + 1].cellColor = "bg-red-500";
       this.stop = true;

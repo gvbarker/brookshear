@@ -106,7 +106,6 @@ const assembler = class {
         throw new Error(`Accessed invalid value "${num}"`);
       return num.slice(1, 3);
     } catch (err) {
-      
       this.#handleErrors(err);
       return;
     }
@@ -158,7 +157,6 @@ const assembler = class {
     });
   }
   #handleTwoOps(op, line) {
-    
     const hasImm = line.indexOf("#") > -1;
     const hasAddr = line.indexOf("$") > -1;
     const registerRegex = /(r([0-9]|[a-f]|[A-F]))/gi;
@@ -178,7 +176,7 @@ const assembler = class {
       [`Invalid number of registers for operation "${op}"`]:
         this.OPS.addrs.includes(op) && registerCount > 1,
     };
-    
+
     this.#handleSyntaxErrors(syntaxChecks);
     let operands = line.slice(line.indexOf("R", 3), line.length);
     operands = this.#getValidOperands(operands.split(","));
@@ -231,7 +229,9 @@ const assembler = class {
     const operation = operationRegex.exec(line);
     const syntaxChecks = {
       [`No operation found in line ${line}`]: !operation,
-      [`Invalid operation in line ${line}`]: !(operation && operation[0] in this.OPS),
+      [`Invalid operation in line ${line}`]: !(
+        operation && operation[0] in this.OPS
+      ),
     };
     this.#handleSyntaxErrors(syntaxChecks);
     return operation[0];

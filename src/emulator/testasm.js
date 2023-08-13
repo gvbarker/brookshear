@@ -62,8 +62,7 @@ add r5, r5, r6
 add r4, r4, r6
 beq r0, $10
 end:
-hlt`
+hlt`,
 };
-
 
 export default testASM;

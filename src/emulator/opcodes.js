@@ -28,7 +28,7 @@ const opcodes = {
   BEQ: "B",
   HLT: "C",
   threeOps: ["ADD", "SUB", "IOR", "AND", "XOR"],
-  twoOps: ["LDR", "MOV", "STR", "CPY", "ROR", "BEQ",],
+  twoOps: ["LDR", "MOV", "STR", "CPY", "ROR", "BEQ"],
   noOps: ["HLT"],
   imms: ["MOV", "ROR"],
   addrs: ["LDR", "STR", "BEQ"],

@@ -9,7 +9,7 @@ function App() {
   const emuCPU = new cpu();
   return (
     <div className="w-full">
-      <Header /> 
+      <Header />
       <div className="bg-zinc-700 h-screen">
         <BoxForm
           asm={emuASM}
