@@ -15,3 +15,6 @@ If you'd like to contribute, please fork the repo and make a feature branch. Pul
 * Repository: https://github.com/gvbarker/brookshear/
 * Related:
   - Joel Edström's implementation: https://github.com/joeledstrom/brookshear-emu
+
+## License
+The code in this project is licensed under the MIT license.
