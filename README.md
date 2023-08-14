@@ -1,5 +1,5 @@
 # Brookshear Machine++
-An emulation of the theoretical Brookshear Machine with a rudimentary assembly language, implemented in React.JS. Inspired by the emulator implementation from Joel Edström.
+An emulation of the theoretical Brookshear Machine with a rudimentary assembly language, implemented in React.JS using TailwindCSS for style. Inspired by the emulator implementation from Joel Edström.
 
 ## Features
 * Basic assembly debugging features
