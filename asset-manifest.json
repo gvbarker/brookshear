@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/brookshear/public/static/css/main.3964cb55.css",
-    "main.js": "/brookshear/public/static/js/main.fffa26d1.js",
-    "static/js/787.11589966.chunk.js": "/brookshear/public/static/js/787.11589966.chunk.js",
-    "index.html": "/brookshear/public/index.html",
-    "main.3964cb55.css.map": "/brookshear/public/static/css/main.3964cb55.css.map",
-    "main.fffa26d1.js.map": "/brookshear/public/static/js/main.fffa26d1.js.map",
-    "787.11589966.chunk.js.map": "/brookshear/public/static/js/787.11589966.chunk.js.map"
+    "main.css": "/brookshear/static/css/main.3964cb55.css",
+    "main.js": "/brookshear/static/js/main.c7ea0513.js",
+    "static/js/787.11589966.chunk.js": "/brookshear/static/js/787.11589966.chunk.js",
+    "index.html": "/brookshear/index.html",
+    "main.3964cb55.css.map": "/brookshear/static/css/main.3964cb55.css.map",
+    "main.c7ea0513.js.map": "/brookshear/static/js/main.c7ea0513.js.map",
+    "787.11589966.chunk.js.map": "/brookshear/static/js/787.11589966.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3964cb55.css",
-    "static/js/main.fffa26d1.js"
+    "static/js/main.c7ea0513.js"
   ]
 }
